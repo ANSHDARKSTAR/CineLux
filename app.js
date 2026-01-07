@@ -1,38 +1,56 @@
-const movies = [
- {title:"Interstellar",cat:"scifi",img:"https://images.unsplash.com/photo-1626814026160-2237a95fc5a0"},
- {title:"Inception",cat:"action",img:"https://images.unsplash.com/photo-1440404653325-ab127d49abc1"},
- {title:"Joker",cat:"drama",img:"https://images.unsplash.com/photo-1509248961158-e54f6934749c"},
- {title:"Batman",cat:"action",img:"https://images.unsplash.com/photo-1509347528160-9a9e33742cdb"}
+const movies=[
+ {t:"Interstellar",c:"scifi",i:"https://images.unsplash.com/photo-1626814026160-2237a95fc5a0"},
+ {t:"Inception",c:"action",i:"https://images.unsplash.com/photo-1440404653325-ab127d49abc1"},
+ {t:"Joker",c:"drama",i:"https://images.unsplash.com/photo-1509248961158-e54f6934749c"},
+ {t:"Batman",c:"action",i:"https://images.unsplash.com/photo-1509347528160-9a9e33742cdb"}
 ];
 
-const container = document.getElementById("movies");
+const auth=document.getElementById("auth");
+const app=document.getElementById("app");
 
-function render(list){
- container.innerHTML = "";
- list.forEach(m=>{
-  container.innerHTML += `
-   <div class="movie">
-     <img src="${m.img}">
-     <h4>${m.title}</h4>
-   </div>`;
- });
+function login(){
+ localStorage.setItem("user","demo");
+ auth.style.display="none";
+ app.style.display="block";
+ loadMovies();
 }
 
-function showCategory(cat){
- if(cat==="all") render(movies);
- else render(movies.filter(m=>m.cat===cat));
+function googleLogin(){
+ login(); // demo
+}
+
+function toggleAuth(){
+ alert("Signup UI coming next step");
+}
+
+function loadMovies(){
+ render("trending",movies);
+ render("action",movies.filter(m=>m.c==="action"));
+ render("scifi",movies.filter(m=>m.c==="scifi"));
+}
+
+function render(id,list){
+ document.getElementById(id).innerHTML=
+ list.map(m=>`
+  <div class="movie">
+   <img src="${m.i}">
+  </div>
+ `).join("");
 }
 
 function openAccount(){
- document.getElementById("accountModal").style.display="flex";
+ document.getElementById("account").style.display="flex";
 }
-
 function closeAccount(){
- document.getElementById("accountModal").style.display="none";
+ document.getElementById("account").style.display="none";
+}
+function logout(){
+ localStorage.clear();
+ location.reload();
 }
 
-function changePassword(){
- alert("Password change requires backend (Firebase / PHP)");
+if(localStorage.getItem("user")){
+ auth.style.display="none";
+ app.style.display="block";
+ loadMovies();
 }
-
-render(movies);
