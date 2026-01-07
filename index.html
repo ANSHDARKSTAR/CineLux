@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CineLux | Premium Streaming</title>
+    <title>CineLux | Experience Cinema</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -11,113 +11,105 @@
 </head>
 <body>
 
-    <div id="toast">Added to Watchlist!</div>
+    <div id="toast">Added to Watchlist</div>
 
     <div id="authOverlay">
-        <div>
+        <div class="auth-card">
             <h1 class="logo-text">CINE<span>LUX</span></h1>
+            <p style="color: #666; margin-bottom: 2rem;">Sign in to start your premium experience</p>
             <div id="g_id_onload"
                 data-client_id="739537461326-r2gspogeoruch5a4b2m6kui2v9e1lchp.apps.googleusercontent.com"
                 data-callback="onGoogleLogin">
             </div>
-            <div class="g_id_signin" data-type="standard" data-size="large"></div>
+            <div class="g_id_signin" data-type="standard" data-size="large" data-theme="filled_black"></div>
         </div>
     </div>
 
     <div id="theater">
         <div class="theater-header">
             <h2 id="mTitle"></h2>
-            <button onclick="closeTheater()" class="btn btn-gold">CLOSE ✕</button>
+            <button onclick="closeTheater()" class="close-btn">✕</button>
         </div>
-        <video id="vid" controls>
-            <source src="https://www.w3schools.com/html/mov_bbb.mp4">
-        </video>
+        <div class="video-container">
+            <video id="vid" controls poster="https://images.unsplash.com/photo-1485846234645-a62644f84728?w=1200">
+                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+            </video>
+        </div>
     </div>
 
-    <nav>
-        <div onclick="toggleMenu(true)" class="menu-trigger">☰ MENU</div>
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Search Movies..." onkeyup="searchMovies()">
+    <nav id="navbar">
+        <div class="nav-left">
+            <div onclick="toggleMenu(true)" class="menu-icon">
+                <span></span><span></span>
+            </div>
+            <h2 class="brand" onclick="showAllMovies()">CINE<span>LUX</span></h2>
         </div>
-        <div id="uIcon" onclick="showPanel('account')" class="user-avatar">?</div>
+        
+        <div class="search-container">
+            <div class="search-box">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                <input type="text" id="searchInput" placeholder="Search movies, genres..." onkeyup="searchMovies()">
+            </div>
+        </div>
+
+        <div class="nav-right">
+            <div id="uIcon" onclick="showPanel('account')" class="avatar">?</div>
+        </div>
     </nav>
 
     <div class="sidebar" id="sidebar">
-        <div class="side-link" onclick="showAllMovies()">Discovery</div>
-        <div class="side-link" onclick="showWatchlist()">My Watchlist</div>
-        <hr class="divider">
-        <div class="side-link" onclick="showPanel('account')">Account</div>
-        <div class="side-link" onclick="showPanel('settings')">Settings</div>
-        <div class="side-link logout-link" onclick="logout()">Logout</div>
+        <div class="sidebar-header">
+            <h3>Menu</h3>
+            <button onclick="toggleMenu(false)">✕</button>
+        </div>
+        <div class="sidebar-links">
+            <a onclick="showAllMovies()">Discovery</a>
+            <a onclick="showWatchlist()">My Watchlist</a>
+            <div class="sidebar-sep"></div>
+            <a onclick="showPanel('account')">Account</a>
+            <a onclick="showPanel('settings')">Settings</a>
+            <a onclick="logout()" class="logout-txt">Logout</a>
+        </div>
     </div>
 
     <section class="hero" id="heroBanner">
-        <div>
-            <p class="hero-tag">NEW RELEASE</p>
-            <h1 class="hero-title">INTERSTELLAR</h1>
-            <button class="btn btn-gold" onclick="openTheater('Interstellar')">STREAM NOW</button>
+        <div class="hero-content">
+            <span class="badge">TRENDING</span>
+            <h1>INTERSTELLAR</h1>
+            <p>A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.</p>
+            <div class="hero-btns">
+                <button class="btn btn-gold" onclick="openTheater('Interstellar')">STREAM NOW</button>
+                <button class="btn btn-glass" onclick="toggleWatchlist('Interstellar')">+ WATCHLIST</button>
+            </div>
         </div>
     </section>
 
     <main>
         <div id="homePanel" class="panel active-panel">
-            
-            <section id="continueSection" style="display:none; margin-bottom: 40px;">
-                <h3 style="color:var(--gold); margin-bottom:15px;">CONTINUE WATCHING</h3>
+            <section id="continueSection" class="row-section" style="display:none;">
+                <h3 class="row-title">CONTINUE WATCHING</h3>
                 <div class="movie-grid" id="continueGrid"></div>
             </section>
 
-            <h2 id="catTitle">DISCOVERY</h2>
-            
-            <div class="filter-bar">
-                <button class="filter-btn active" onclick="filterGenre('All', this)">All</button>
-                <button class="filter-btn" onclick="filterGenre('Sci-Fi', this)">Sci-Fi</button>
-                <button class="filter-btn" onclick="filterGenre('Drama', this)">Drama</button>
+            <h3 class="row-title" id="catTitle">DISCOVERY</h3>
+            <div class="filter-row">
+                <button class="filter-tag active" onclick="filterGenre('All', this)">All</button>
+                <button class="filter-tag" onclick="filterGenre('Sci-Fi', this)">Sci-Fi</button>
+                <button class="filter-tag" onclick="filterGenre('Drama', this)">Drama</button>
             </div>
 
             <div class="movie-grid" id="movieGrid"></div>
         </div>
 
         <div id="accountPanel" class="panel">
-            <h1>Account Hub</h1>
-            <div class="card">
-                <h3>Subscription</h3>
-                <p class="status-pro">Lifetime Pro ✓</p>
-            </div>
-        </div>
-
-        <div id="settingsPanel" class="panel">
-            <h1>Settings</h1>
-            <div class="card">
-                <div class="btn-toggle">
-                    <span>🎥 Cinema Mode</span>
-                    <div class="toggle" onclick="this.classList.toggle('active')"></div>
+            <div class="settings-container">
+                <h2>Account</h2>
+                <div class="glass-card">
+                    <p>Status: <span class="gold-text">Premium Pro</span></p>
                 </div>
-                <button class="btn btn-gold" onclick="checkUpdates(this)">Check Updates</button>
             </div>
         </div>
     </main>
-
-    <footer>
-        <div class="footer-grid">
-            <div>
-                <h3 class="gold-text">CINELUX</h3>
-                <p>The gold standard in home cinema streaming. Experience 4K quality from your couch.</p>
-            </div>
-            <div>
-                <h4>Explore</h4>
-                <p onclick="showAllMovies()">Browse All</p>
-                <p>Originals</p>
-                <p>Trending</p>
-            </div>
-            <div>
-                <h4>Support</h4>
-                <p>Help Center</p>
-                <p>Privacy Policy</p>
-                <p>Terms of Service</p>
-            </div>
-        </div>
-    </footer>
 
     <script src="script.js"></script>
 </body>
