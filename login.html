@@ -4,45 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CineLux | Secure Access</title>
-    
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
-    
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
     <style>
-        :root {
-            --gold: #D4AF37;
-            --bg: #050505;
-            --glass: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.1);
-            --gold-glow: rgba(212, 175, 55, 0.3);
-        }
-
+        :root { --gold: #D4AF37; --bg: #050505; --glass: rgba(255, 255, 255, 0.05); --border: rgba(255, 255, 255, 0.1); --gold-glow: rgba(212, 175, 55, 0.3); }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
         body { background: var(--bg); color: #fff; height: 100vh; display: flex; overflow: hidden; }
 
-        /* Left Side Visual */
-        .auth-visual {
-            flex: 1.2;
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
-                        url('https://images.unsplash.com/photo-1485846234645-a62644f84728?w=1200') center/cover;
-            display: flex; align-items: center; justify-content: center; position: relative;
-        }
+        .auth-visual { flex: 1.2; background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1485846234645-a62644f84728?w=1200') center/cover; display: flex; align-items: center; justify-content: center; position: relative; }
         .auth-visual::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to right, transparent 70%, var(--bg)); }
         .visual-text { z-index: 2; text-align: center; }
         .visual-text h1 { font-size: 4rem; font-weight: 800; letter-spacing: -2px; line-height: 0.9; }
-        .visual-text p { color: var(--gold); letter-spacing: 5px; margin-top: 20px; font-weight: 600; }
 
-        /* Right Side Form */
         .auth-form-container { flex: 1; display: flex; justify-content: center; align-items: center; padding: 0 8%; }
-        .auth-card { width: 100%; max-width: 400px; animation: slideUp 0.6s ease-out; }
-
+        .auth-card { width: 100%; max-width: 400px; animation: slideUp 0.5s ease-out; }
         .brand { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; }
         .brand span { color: var(--gold); }
         .subtitle { color: #666; margin-bottom: 30px; font-size: 0.9rem; }
 
-        /* Inputs */
         .input-group { margin-bottom: 20px; }
         .input-group label { display: block; font-size: 0.75rem; font-weight: 800; color: #444; text-transform: uppercase; margin-bottom: 8px; }
         input { width: 100%; padding: 16px; background: var(--glass); border: 1px solid var(--border); border-radius: 14px; color: #fff; font-size: 1rem; transition: 0.3s; }
@@ -51,157 +32,121 @@
         .btn-primary { width: 100%; padding: 18px; background: var(--gold); border: none; border-radius: 14px; color: #000; font-weight: 800; cursor: pointer; transition: 0.3s; }
         .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 25px var(--gold-glow); }
 
-        /* OTP Input Style */
         .otp-container { display: flex; gap: 10px; margin-bottom: 25px; }
         .otp-box { width: 100%; height: 65px; text-align: center; font-size: 1.8rem; font-weight: 800; color: var(--gold); }
-
         .divider { display: flex; align-items: center; margin: 30px 0; color: #333; font-size: 0.7rem; font-weight: 800; letter-spacing: 1px; }
         .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--border); }
         .divider span { padding: 0 15px; }
 
-        /* Spinner for Magic Link */
-        .spinner { width: 40px; height: 40px; border: 4px solid var(--glass); border-top: 4px solid var(--gold); border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto; }
-
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        
         @media (max-width: 900px) { .auth-visual { display: none; } }
     </style>
 </head>
 <body>
 
     <section class="auth-visual">
-        <div class="visual-text"><h1>PREMIUM<br>CINEMA.</h1><p>GOLD ACCESS</p></div>
+        <div class="visual-text"><h1>GOLD<br>CINEMA.</h1></div>
     </section>
 
     <section class="auth-form-container">
-        <div class="auth-card" id="loadingScreen" style="display: none; text-align: center;">
-            <div class="spinner"></div>
-            <h2 class="brand">CINE<span>LUX</span></h2>
-            <p class="subtitle" style="color: var(--gold)">Verifying security link...</p>
-        </div>
-
         <div class="auth-card" id="step1">
             <h2 class="brand">CINE<span>LUX</span></h2>
-            <p class="subtitle">Enter your email to receive a secure access link.</p>
-
+            <p class="subtitle">Secure login with email or Google.</p>
             <form onsubmit="handleSendOTP(event)">
-                <div class="input-group">
-                    <label>Email Address</label>
-                    <input type="email" id="userEmail" placeholder="you@example.com" required>
-                </div>
+                <div class="input-group"><label>Email Address</label><input type="email" id="userEmail" required></div>
                 <button type="submit" id="sendBtn" class="btn-primary">SEND ACCESS CODE</button>
             </form>
-
             <div class="divider"><span>OR QUICK ACCESS</span></div>
-
-            <div style="display: flex; justify-content: center;">
-                <div id="g_id_onload"
-                    data-client_id="739537461326-r2gspogeoruch5a4b2m6kui2v9e1lchp.apps.googleusercontent.com"
-                    data-callback="onGoogleLogin">
-                </div>
-                <div class="g_id_signin" data-type="standard" data-theme="filled_black" data-shape="pill"></div>
-            </div>
+            <div id="g_id_onload" data-client_id="YOUR_GOOGLE_ID" data-callback="onGoogleLogin"></div>
+            <div class="g_id_signin" data-type="standard" data-theme="filled_black" data-shape="pill"></div>
         </div>
 
         <div class="auth-card" id="step2" style="display: none;">
             <h2 class="brand">VERIFY</h2>
-            <p class="subtitle">Enter the code sent to your inbox or click the link in the email.</p>
-
+            <p class="subtitle">Enter the 4-digit code sent to your email.</p>
             <div class="otp-container">
                 <input type="text" class="otp-box" maxlength="1" onkeyup="otpTab(this, 0)">
                 <input type="text" class="otp-box" maxlength="1" onkeyup="otpTab(this, 1)">
                 <input type="text" class="otp-box" maxlength="1" onkeyup="otpTab(this, 2)">
                 <input type="text" class="otp-box" maxlength="1" onkeyup="otpTab(this, 3)">
             </div>
-            
-            <button onclick="handleVerifyOTP()" class="btn-primary">VERIFY MANUALLY</button>
-            <p style="text-align: center; margin-top: 25px; font-size: 0.8rem;">
-                <a href="#" onclick="location.reload()" style="color: #666; text-decoration: none;">Wrong email? Try again.</a>
-            </p>
+            <button onclick="handleVerifyOTP()" class="btn-primary">VERIFY CODE</button>
+        </div>
+
+        <div class="auth-card" id="step3" style="display: none;">
+            <h2 class="brand">PROFILE</h2>
+            <p class="subtitle">Choose a username for your CineLux account.</p>
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" id="chosenName" placeholder="Enter your name...">
+            </div>
+            <button onclick="finalizeAccount()" class="btn-primary">ENTER DASHBOARD</button>
         </div>
     </section>
 
     <script>
-        // --- CONFIGURATION ---
-        const PUBLIC_KEY = "tq1fKcDHQTTq463_F"; 
-        const SERVICE_ID = "service_l7p319u";
-        const TEMPLATE_ID = "template_7g72hac";
+        const PUBLIC_KEY = "YOUR_PUBLIC_KEY"; 
+        const SERVICE_ID = "YOUR_SERVICE_ID";
+        const TEMPLATE_ID = "YOUR_TEMPLATE_ID";
 
         emailjs.init(PUBLIC_KEY);
-        let generatedOTP = "";
-        let targetEmail = "";
+        let generatedOTP = "", targetEmail = "";
 
-        // --- 1. MAGIC LINK DETECTOR ---
-        window.addEventListener('DOMContentLoaded', () => {
+        // MAGIC LINK CHECK
+        window.onload = () => {
             const params = new URLSearchParams(window.location.search);
-            const verifyCode = params.get('verify');
-            const emailAddr = params.get('email');
+            if (params.get('verify')) processLogin(params.get('email'));
+        };
 
-            if (verifyCode && emailAddr) {
-                document.getElementById('step1').style.display = 'none';
-                document.getElementById('loadingScreen').style.display = 'block';
-                
-                // Logic: In this frontend demo, we trust the link if it has the params
-                setTimeout(() => {
-                    saveAndRedirect({ name: emailAddr.split('@')[0], email: emailAddr });
-                }, 2000);
-            }
-        });
-
-        // --- 2. SEND OTP / EMAIL ---
         function handleSendOTP(e) {
             e.preventDefault();
             targetEmail = document.getElementById('userEmail').value;
-            const btn = document.getElementById('sendBtn');
             generatedOTP = Math.floor(1000 + Math.random() * 9000).toString();
-            
-            btn.innerText = "SENDING...";
-            btn.disabled = true;
-
-            const params = { email: targetEmail, otp_code: generatedOTP };
-
-            emailjs.send(SERVICE_ID, TEMPLATE_ID, params)
-                .then(() => {
-                    document.getElementById('step1').style.display = 'none';
-                    document.getElementById('step2').style.display = 'block';
-                })
-                .catch((err) => {
-                    alert("Email failed. Check your API Keys.");
-                    btn.innerText = "SEND ACCESS CODE";
-                    btn.disabled = false;
-                });
+            emailjs.send(SERVICE_ID, TEMPLATE_ID, { email: targetEmail, otp_code: generatedOTP }).then(() => {
+                document.getElementById('step1').style.display = 'none';
+                document.getElementById('step2').style.display = 'block';
+            });
         }
-
-        // --- 3. GOOGLE LOGIN ---
-        function onGoogleLogin(response) {
-            const payload = JSON.parse(atob(response.credential.split(".")[1]));
-            saveAndRedirect({ name: payload.name, email: payload.email, img: payload.picture });
-        }
-
-        // --- 4. MANUAL OTP VERIFY ---
-        function otpTab(el, i) { if (el.value.length === 1 && i < 3) document.querySelectorAll('.otp-box')[i+1].focus(); }
 
         function handleVerifyOTP() {
-            const boxes = document.querySelectorAll('.otp-box');
-            let enteredCode = "";
-            boxes.forEach(b => enteredCode += b.value);
+            let entered = "";
+            document.querySelectorAll('.otp-box').forEach(b => entered += b.value);
+            if (entered === generatedOTP) processLogin(targetEmail);
+            else alert("Wrong code");
+        }
 
-            if (enteredCode === generatedOTP) {
-                saveAndRedirect({ name: targetEmail.split('@')[0], email: targetEmail });
+        function onGoogleLogin(res) {
+            const payload = JSON.parse(atob(res.credential.split(".")[1]));
+            saveAndGo({ name: payload.name, email: payload.email, img: payload.picture });
+        }
+
+        function processLogin(email) {
+            // Check if user exists in local storage
+            const existingUser = JSON.parse(localStorage.getItem('user_db_' + email));
+            if (existingUser && existingUser.name) {
+                saveAndGo(existingUser);
             } else {
-                alert("Incorrect code.");
-                boxes.forEach(b => b.value = "");
-                boxes[0].focus();
+                targetEmail = email;
+                document.getElementById('step1').style.display = 'none';
+                document.getElementById('step2').style.display = 'none';
+                document.getElementById('step3').style.display = 'block';
             }
         }
 
-        function saveAndRedirect(user) {
+        function finalizeAccount() {
+            const name = document.getElementById('chosenName').value;
+            if (!name) return alert("Enter a name");
+            const newUser = { name, email: targetEmail, joined: new Date().getFullYear() };
+            localStorage.setItem('user_db_' + targetEmail, JSON.stringify(newUser));
+            saveAndGo(newUser);
+        }
+
+        function saveAndGo(user) {
             localStorage.setItem("user", JSON.stringify(user));
             window.location.href = "index.html";
         }
 
-        // Guard
+        function otpTab(el, i) { if (el.value.length === 1 && i < 3) document.querySelectorAll('.otp-box')[i+1].focus(); }
         if(localStorage.getItem("user")) window.location.href = "index.html";
     </script>
 </body>
