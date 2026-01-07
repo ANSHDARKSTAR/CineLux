@@ -2,19 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CineLux | Ultra Premium</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineLux | Enterprise Edition</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --gold: #D4AF37;
-            --bg: #050505;
-            --surface: #111111;
-            --border: rgba(255, 255, 255, 0.1);
-            --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --gold: #D4AF37; --bg: #050505; --surface: #121212;
+            --border: rgba(255, 255, 255, 0.08); --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -22,205 +19,175 @@
 
         /* --- NAVIGATION --- */
         nav {
-            position: fixed; top: 0; width: 100%; height: 75px;
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 5%; z-index: 1000; background: rgba(5, 5, 5, 0.9);
+            position: fixed; top: 0; width: 100%; height: 75px; display: flex; align-items: center; 
+            justify-content: space-between; padding: 0 5%; z-index: 1000; background: rgba(5, 5, 5, 0.9);
             backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
         }
 
-        .logo { font-size: 1.5rem; font-weight: 800; text-decoration: none; color: #fff; }
-        .logo span { color: var(--gold); }
-
         /* --- SIDEBAR --- */
         .sidebar {
-            position: fixed; left: -300px; top: 0; height: 100vh; width: 300px;
+            position: fixed; left: -320px; top: 0; height: 100vh; width: 300px;
             background: var(--surface); z-index: 2000; transition: var(--transition);
-            padding: 40px 20px; border-right: 1px solid var(--border);
-            overflow-y: auto;
+            padding: 40px 20px; border-right: 1px solid var(--border); overflow-y: auto;
         }
         .sidebar.active { left: 0; }
         .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; z-index: 1500; }
         .sidebar-overlay.active { display: block; }
 
-        .menu-list { list-style: none; margin-top: 30px; }
+        .menu-list { list-style: none; margin-top: 20px; }
         .menu-item { 
             padding: 14px 15px; font-size: 0.95rem; font-weight: 600; color: #888;
-            cursor: pointer; transition: 0.3s; border-radius: 12px; margin-bottom: 5px;
-            display: flex; align-items: center;
+            cursor: pointer; transition: 0.3s; border-radius: 12px; margin-bottom: 5px; display: flex; align-items: center;
         }
-        .menu-item i { width: 25px; margin-right: 12px; font-size: 1.1rem; }
-        .menu-item:hover { color: #fff; background: rgba(255,255,255,0.05); }
+        .menu-item i { width: 30px; font-size: 1.1rem; }
         .menu-item.active { color: var(--gold); background: rgba(212, 175, 55, 0.1); }
 
-        /* --- LAYOUT --- */
-        .main-content { padding: 110px 5% 100px; min-height: 100vh; }
+        /* --- CONTENT --- */
+        .main-content { padding: 110px 6% 100px; min-height: 100vh; }
         .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
-        .card { background: var(--surface); border-radius: 15px; overflow: hidden; border: 1px solid var(--border); transition: 0.3s; }
-        .card:hover { transform: translateY(-5px); border-color: var(--gold); }
+        .card { background: var(--surface); border-radius: 15px; overflow: hidden; border: 1px solid var(--border); }
         .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
-        .card-body { padding: 12px; }
 
-        /* --- UI COMPONENTS --- */
-        .glass-panel { background: var(--surface); padding: 30px; border-radius: 20px; border: 1px solid var(--border); margin-bottom: 20px; }
-        .badge { background: var(--gold); color: #000; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; margin-left: 10px; }
+        /* --- SETTINGS HUB --- */
+        .settings-hub { display: grid; grid-template-columns: 250px 1fr; gap: 30px; }
+        .settings-nav { display: flex; flex-direction: column; gap: 10px; border-right: 1px solid var(--border); }
+        .set-link { padding: 12px; cursor: pointer; color: #666; font-size: 0.9rem; border-radius: 8px; transition: 0.3s; }
+        .set-link:hover, .set-link.active { color: var(--gold); background: rgba(255,255,255,0.05); }
+        
+        .settings-view { padding: 10px 20px; }
+        .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid var(--border); }
+        .setting-row h4 { font-size: 1rem; margin-bottom: 4px; }
+        .setting-row p { font-size: 0.8rem; color: #666; }
 
-        @media (min-width: 1024px) { .movie-grid { grid-template-columns: repeat(6, 1fr); } }
+        input[type="checkbox"] { accent-color: var(--gold); transform: scale(1.3); }
+        select, input[type="text"] { background: #222; border: 1px solid #333; color: #fff; padding: 8px; border-radius: 5px; }
+
+        @media (max-width: 900px) {
+            .settings-hub { grid-template-columns: 1fr; }
+            .settings-nav { flex-direction: row; overflow-x: auto; border-right: none; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+        }
     </style>
 </head>
 <body>
 
     <div class="sidebar-overlay" id="overlay" onclick="toggleMenu()"></div>
     <div class="sidebar" id="sidebar">
-        <a href="#" class="logo">CINE<span>LUX</span></a>
+        <h2 style="padding: 0 15px; margin-bottom: 20px;">CINE<span>LUX</span></h2>
         <ul class="menu-list">
-            <li class="menu-item active" id="m-home" onclick="showSection('home')"><i class="fa-solid fa-house"></i> Home</li>
-            <li class="menu-item" id="m-trending" onclick="showSection('trending')"><i class="fa-solid fa-fire"></i> Trending</li>
-            <li class="menu-item" id="m-toprated" onclick="showSection('toprated')"><i class="fa-solid fa-star"></i> Top Rated</li>
-            <li class="menu-item" id="m-watchlist" onclick="showSection('watchlist')"><i class="fa-solid fa-heart"></i> My Watchlist</li>
-            <li class="menu-item" id="m-insights" onclick="showSection('insights')"><i class="fa-solid fa-chart-line"></i> Viewing Insights</li>
-            <li class="menu-item" id="m-settings" onclick="showSection('settings')"><i class="fa-solid fa-gear"></i> Settings</li>
-            <li class="menu-item" id="m-about" onclick="showSection('about')"><i class="fa-solid fa-circle-info"></i> About Us</li>
-            <li class="menu-item" onclick="logout()" style="color: #ff4444; margin-top: 20px;"><i class="fa-solid fa-right-from-bracket"></i> Logout</li>
+            <li class="menu-item active" onclick="showSection('home')"><i class="fa-solid fa-house"></i> Home</li>
+            <li class="menu-item" onclick="showSection('downloads')"><i class="fa-solid fa-download"></i> Downloads</li>
+            <li class="menu-item" onclick="showSection('watchlist')"><i class="fa-solid fa-heart"></i> Watchlist</li>
+            <li class="menu-item" onclick="showSection('settings')"><i class="fa-solid fa-gear"></i> Settings</li>
+            <li class="menu-item" onclick="showSection('about')"><i class="fa-solid fa-circle-info"></i> About</li>
+            <li class="menu-item" onclick="logout()" style="color: #ff4444; margin-top: 50px;"><i class="fa-solid fa-right-from-bracket"></i> Logout</li>
         </ul>
     </div>
 
     <nav>
         <div style="display: flex; align-items: center; gap: 20px;">
-            <button style="background:none; border:none; color:var(--gold); font-size:1.5rem; cursor:pointer;" onclick="toggleMenu()">☰</button>
-            <a href="#" class="logo">CINE<span>LUX</span></a>
+            <button style="background:none; border:none; color:var(--gold); font-size:1.5rem;" onclick="toggleMenu()">☰</button>
+            <a href="#" style="text-decoration:none; color:#fff; font-weight:800; font-size:1.5rem;">CINE<span>LUX</span></a>
         </div>
-        <div id="userInitial" style="width:40px; height:40px; background:var(--gold); border-radius:50%; color:#000; display:flex; align-items:center; justify-content:center; font-weight:800;">?</div>
+        <div id="uInit" style="width:40px; height:40px; background:var(--gold); border-radius:50%; color:#000; display:flex; align-items:center; justify-content:center; font-weight:800;">?</div>
     </nav>
 
     <main class="main-content">
         
         <section id="home-sec">
-            <h2 style="margin-bottom: 20px;">Explore Cinema</h2>
+            <h2 style="margin-bottom: 20px;">New Releases</h2>
             <div class="movie-grid" id="homeGrid"></div>
         </section>
 
-        <section id="trending-sec" style="display: none;">
-            <h2 style="margin-bottom: 20px;">Trending This Week</h2>
-            <div class="movie-grid" id="trendingGrid"></div>
-        </section>
-
-        <section id="toprated-sec" style="display: none;">
-            <h2 style="margin-bottom: 20px;">All-Time Classics</h2>
-            <div class="movie-grid" id="topRatedGrid"></div>
-        </section>
-
-        <section id="watchlist-sec" style="display: none;">
-            <h2 style="margin-bottom: 20px;">My Watchlist</h2>
-            <div class="movie-grid" id="watchlistGrid"></div>
-        </section>
-
-        <section id="insights-sec" style="display: none;">
-            <div class="glass-panel">
-                <h2 style="margin-bottom: 15px;">Viewing Analytics</h2>
-                <p style="color: #aaa;">Tracking your cinema journey.</p>
-                <div style="margin-top: 20px;">
-                    <p>Total Movies Watched: <b>142</b></p>
-                    <p>Favorite Genre: <b>Sci-Fi</b></p>
-                    <p>Screen Time (This Month): <b>24h 15m</b></p>
+        <section id="downloads-sec" style="display: none;">
+            <div style="background: #111; padding: 20px; border-radius: 15px; margin-bottom: 30px; border: 1px solid var(--border);">
+                <h4>Offline Storage</h4>
+                <div style="width:100%; height:8px; background:#222; border-radius:10px; margin: 10px 0;">
+                    <div style="width:35%; height:100%; background:var(--gold); border-radius:10px;"></div>
                 </div>
+                <p style="font-size:0.8rem; color:#666;">14.2 GB used of 50 GB</p>
+            </div>
+            <div class="movie-grid">
+                <div class="card"><img src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400"><div style="padding:10px;"><b>Inception</b><br><small>4.2 GB • Downloaded</small></div></div>
             </div>
         </section>
 
         <section id="settings-sec" style="display: none;">
-            <div class="glass-panel">
-                <h2 style="margin-bottom: 20px;">Profile Settings</h2>
-                <div style="margin-bottom: 15px;">
-                    <label style="font-size: 0.8rem; color: #666;">DISPLAY NAME</label>
-                    <input type="text" id="newName" style="width:100%; background:#222; border:1px solid #333; color:#fff; padding:10px; border-radius:8px; margin-top:5px;">
+            <div class="settings-hub">
+                <div class="settings-nav">
+                    <div class="set-link active" onclick="setTab('general')">General</div>
+                    <div class="set-link" onclick="setTab('notif')">Notifications</div>
+                    <div class="set-link" onclick="setTab('purchase')">Purchases</div>
+                    <div class="set-link" onclick="setTab('video')">Video Quality</div>
+                    <div class="set-link" onclick="setTab('privacy')">Privacy & Data</div>
+                    <div class="set-link" onclick="setTab('help')">Help & Legal</div>
                 </div>
-                <button onclick="saveSettings()" style="width:100%; padding:12px; background:var(--gold); border:none; border-radius:8px; font-weight:800; cursor:pointer;">SAVE CHANGES</button>
-            </div>
-        </section>
 
-        <section id="about-sec" style="display: none;">
-            <div class="glass-panel">
-                <h2 style="margin-bottom: 10px;">CineLux Ultra <span class="badge">v2.5</span></h2>
-                <p style="color:#aaa; line-height: 1.6;">A luxury interface designed for film archivists. We use low-latency protocols to ensure your viewing experience is never interrupted.</p>
+                <div class="settings-view">
+                    <div id="gen-tab">
+                        <h3>General Settings</h3>
+                        <div class="setting-row"><div><h4>Username</h4><p>Update your public ID</p></div><input type="text" id="un" placeholder="Name"></div>
+                        <div class="setting-row"><div><h4>Language</h4><p>System display language</p></div><select><option>English</option><option>Spanish</option></select></div>
+                    </div>
+
+                    <div id="vid-tab" style="display:none;">
+                        <h3>Video & Data</h3>
+                        <div class="setting-row"><div><h4>Streaming Quality</h4><p>Highest uses more data</p></div><select><option>Auto</option><option>4K Ultra HD</option><option>Data Saver</option></select></div>
+                        <div class="setting-row"><div><h4>Data Saver Mode</h4><p>Limit bandwidth on mobile networks</p></div><input type="checkbox"></div>
+                    </div>
+
+                    <div id="priv-tab" style="display:none;">
+                        <h3>Privacy & History</h3>
+                        <div class="setting-row"><div><h4>Watch History</h4><p>Enable personalized recommendations</p></div><input type="checkbox" checked></div>
+                        <button style="color:#ff4444; background:none; border:none; margin-top:20px; cursor:pointer;">Clear All History</button>
+                    </div>
+
+                    <div id="help-tab" style="display:none;">
+                        <h3>Support</h3>
+                        <div class="setting-row"><div><h4>Help Center</h4><p>FAQs and Troubleshooting</p></div><i class="fa-solid fa-chevron-right"></i></div>
+                        <div class="setting-row"><div><h4>Privacy Policy</h4><p>How we manage your data</p></div><i class="fa-solid fa-chevron-right"></i></div>
+                    </div>
+                </div>
             </div>
         </section>
 
     </main>
 
     <script>
-        const library = [
-            { id: 1, t: "Inception", y: "2010", r: 9.2, tr: true, i: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400" },
-            { id: 2, t: "The Batman", y: "2022", r: 8.5, tr: true, i: "https://images.unsplash.com/photo-1531259683007-016a7b628fc3?w=400" },
-            { id: 3, t: "Interstellar", y: "2014", r: 9.5, tr: false, i: "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=400" },
-            { id: 4, t: "Dune: Part Two", y: "2024", r: 9.0, tr: true, i: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=400" }
-        ];
-
-        let watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
+        const movies = [{ id: 1, t: "Inception", y: "2010", i: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400" }, { id: 2, t: "Batman", y: "2022", i: "https://images.unsplash.com/photo-1531259683007-016a7b628fc3?w=400" }];
         const user = JSON.parse(localStorage.getItem('user'));
-
-        if(!user) window.location.href = "login.html";
-        document.getElementById('userInitial').innerText = user.name[0].toUpperCase();
+        if(!user) window.location.href="login.html";
+        document.getElementById('uInit').innerText = user.name[0];
 
         function showSection(id) {
-            // Hide all
-            ['home', 'trending', 'toprated', 'watchlist', 'insights', 'settings', 'about'].forEach(s => {
-                const sec = document.getElementById(s + '-sec');
-                if(sec) sec.style.display = 'none';
-                const menu = document.getElementById('m-' + s);
-                if(menu) menu.classList.remove('active');
+            ['home','downloads','watchlist','settings','about'].forEach(s => {
+                const el = document.getElementById(s + '-sec');
+                if(el) el.style.display = 'none';
             });
-
-            // Show current
             document.getElementById(id + '-sec').style.display = 'block';
-            document.getElementById('m-' + id).classList.add('active');
-            
-            if(id === 'home') renderGrid('homeGrid', library);
-            if(id === 'trending') renderGrid('trendingGrid', library.filter(m => m.tr));
-            if(id === 'toprated') renderGrid('topRatedGrid', library.filter(m => m.r >= 9.0));
-            if(id === 'watchlist') renderWL();
-            
+            if(id === 'home') renderGrid();
             toggleMenu();
         }
 
-        function renderGrid(targetId, data) {
-            document.getElementById(targetId).innerHTML = data.map(m => `
-                <div class="card">
-                    <img src="${m.i}">
-                    <div class="card-body">
-                        <b style="font-size:0.85rem;">${m.t}</b>
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:5px;">
-                            <small style="color:#666">${m.y}</small>
-                            <i class="fa-solid fa-heart" onclick="toggleWL(${m.id})" style="color:${watchlist.includes(m.id)?'var(--gold)':'#333'}; cursor:pointer;"></i>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
+        function setTab(tab) {
+            ['gen','notif','purchase','vid','priv','help'].forEach(t => {
+                const el = document.getElementById(t + '-tab');
+                if(el) el.style.display = 'none';
+            });
+            const targets = { 'general':'gen', 'video':'vid', 'privacy':'priv', 'help':'help' };
+            if(targets[tab]) document.getElementById(targets[tab] + '-tab').style.display = 'block';
+            
+            document.querySelectorAll('.set-link').forEach(l => l.classList.remove('active'));
+            event.target.classList.add('active');
         }
 
-        function toggleWL(id) {
-            watchlist = watchlist.includes(id) ? watchlist.filter(x => x!==id) : [...watchlist, id];
-            localStorage.setItem('watchlist', JSON.stringify(watchlist));
-            showSection('home'); // Refresh
+        function renderGrid() {
+            document.getElementById('homeGrid').innerHTML = movies.map(m => `<div class="card"><img src="${m.i}"><div style="padding:10px;"><b>${m.t}</b></div></div>`).join('');
         }
 
-        function renderWL() {
-            const list = library.filter(m => watchlist.includes(m.id));
-            document.getElementById('watchlistGrid').innerHTML = list.length ? list.map(m => `<div class="card"><img src="${m.i}"><div class="card-body"><b>${m.t}</b></div></div>`).join('') : "<p style='color:#444'>Empty</p>";
-        }
-
-        function saveSettings() {
-            const n = document.getElementById('newName').value;
-            if(n) { user.name = n; localStorage.setItem('user', JSON.stringify(user)); location.reload(); }
-        }
-
-        function toggleMenu() {
-            document.getElementById('sidebar').classList.toggle('active');
-            document.getElementById('overlay').classList.toggle('active');
-        }
-
+        function toggleMenu() { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('overlay').classList.toggle('active'); }
         function logout() { localStorage.removeItem('user'); window.location.href="login.html"; }
 
-        // Init
-        showSection('home');
+        renderGrid();
     </script>
 </body>
 </html>
