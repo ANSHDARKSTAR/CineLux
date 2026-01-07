@@ -1,42 +1,32 @@
-/* DATA */
 const movies = [
     { title: "Inception", rating: "8.8", cat: "Sci-Fi", img: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1" },
     { title: "Interstellar", rating: "8.7", cat: "Sci-Fi", img: "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0" },
     { title: "Joker", rating: "8.4", cat: "Drama", img: "https://images.unsplash.com/photo-1509248961158-e54f6934749c" }
 ];
 
-/* STATE */
 let myWatchlist = JSON.parse(localStorage.getItem("watchlist")) || [];
 let recentPlays = JSON.parse(localStorage.getItem("recent")) || [];
 
-const movieGrid = document.getElementById("movieGrid");
-const continueGrid = document.getElementById("continueGrid");
-const continueSection = document.getElementById("continueSection");
-const theater = document.getElementById("theater");
-const vid = document.getElementById("vid");
-const mTitle = document.getElementById("mTitle");
-const sidebar = document.getElementById("sidebar");
-const heroBanner = document.getElementById("heroBanner");
-const catTitle = document.getElementById("catTitle");
+// UI Scroll Effect
+window.onscroll = () => {
+    const nav = document.getElementById("navbar");
+    if (window.scrollY > 50) nav.classList.add("scrolled");
+    else nav.classList.remove("scrolled");
+};
 
-/* INIT */
-function init() {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (!user) return;
-    document.getElementById("authOverlay").style.display = "none";
-    renderMovies(movies);
-    renderRecent();
+// Search Debounce (Performance UX)
+let timeout = null;
+function searchMovies() {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+        const q = document.getElementById("searchInput").value.toLowerCase();
+        renderMovies(movies.filter(m => m.title.toLowerCase().includes(q)));
+    }, 300);
 }
 
-function onGoogleLogin(res) {
-    const payload = JSON.parse(atob(res.credential.split(".")[1]));
-    localStorage.setItem("user", JSON.stringify(payload));
-    location.reload();
-}
-
-/* RENDERING */
-function renderMovies(data, target = movieGrid) {
-    target.innerHTML = data.map(m => `
+function renderMovies(data, target = "movieGrid") {
+    const grid = document.getElementById(target);
+    grid.innerHTML = data.map(m => `
         <div class="movie-card">
             <img src="${m.img}">
             <div class="movie-overlay">
@@ -46,42 +36,30 @@ function renderMovies(data, target = movieGrid) {
                 </button>
             </div>
             <div class="movie-info">
-                <b>${m.title}</b>
-                <div style="display:flex;justify-content:space-between;font-size:12px">
-                    <span style="color:var(--gold)">★ ${m.rating}</span>
-                    <span>${m.cat}</span>
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <b>${m.title}</b>
+                    <span style="color:var(--gold);font-size:12px;">★ ${m.rating}</span>
                 </div>
+                <p style="font-size:11px;color:#666;margin-top:5px;">${m.cat} • 4K ULTRA HD</p>
             </div>
         </div>`).join("");
 }
 
-function renderRecent() {
-    if (recentPlays.length > 0) {
-        continueSection.style.display = "block";
-        const recentData = movies.filter(m => recentPlays.includes(m.title));
-        renderMovies(recentData, continueGrid);
-    } else {
-        continueSection.style.display = "none";
-    }
-}
-
-/* CORE LOGIC */
 function openTheater(t) {
-    mTitle.innerText = t;
-    theater.style.display = "flex";
+    document.getElementById("mTitle").innerText = t;
+    document.getElementById("theater").style.display = "flex";
     
-    // Track Recent
+    // Add to continue watching
     if (!recentPlays.includes(t)) {
         recentPlays.unshift(t);
         if (recentPlays.length > 4) recentPlays.pop();
         localStorage.setItem("recent", JSON.stringify(recentPlays));
-        renderRecent();
     }
 }
 
 function closeTheater() {
-    theater.style.display = "none";
-    vid.pause();
+    document.getElementById("theater").style.display = "none";
+    document.getElementById("vid").pause();
 }
 
 function toggleWatchlist(t) {
@@ -105,44 +83,39 @@ function showToast(msg) {
 }
 
 function filterGenre(genre, btn) {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.filter-tag').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    const filtered = (genre === 'All') ? movies : movies.filter(m => m.cat === genre);
-    renderMovies(filtered);
+    renderMovies(genre === 'All' ? movies : movies.filter(m => m.cat === genre));
 }
 
-/* NAVIGATION */
-function toggleMenu(o) { sidebar.classList.toggle("open", o); }
+function toggleMenu(o) { document.getElementById("sidebar").classList.toggle("open", o); }
 
 function showPanel(p) {
     document.querySelectorAll(".panel").forEach(x => x.classList.remove("active-panel"));
     document.getElementById(p + "Panel").classList.add("active-panel");
-    heroBanner.style.display = (p === "home") ? "flex" : "none";
+    document.getElementById("heroBanner").style.display = (p === "home") ? "flex" : "none";
     toggleMenu(false);
 }
 
-function searchMovies() {
-    const q = document.getElementById("searchInput").value.toLowerCase();
-    renderMovies(movies.filter(m => m.title.toLowerCase().includes(q)));
+function onGoogleLogin(res) {
+    const payload = JSON.parse(atob(res.credential.split(".")[1]));
+    localStorage.setItem("user", JSON.stringify(payload));
+    location.reload();
 }
 
-function showAllMovies() {
-    catTitle.innerText = "DISCOVERY";
-    renderMovies(movies);
-    showPanel("home");
-}
+function showAllMovies() { showPanel('home'); renderMovies(movies); }
 
 function showWatchlist() {
     renderMovies(movies.filter(m => myWatchlist.includes(m.title)));
-    catTitle.innerText = "MY WATCHLIST";
+    document.getElementById("catTitle").innerText = "MY WATCHLIST";
     showPanel("home");
 }
 
 function logout() { localStorage.clear(); location.reload(); }
 
-function checkUpdates(btn) {
-    btn.innerText = "Checking...";
-    setTimeout(() => btn.innerText = "v2.5.0 ✓", 1000);
+// Init
+const u = localStorage.getItem("user");
+if(u) {
+    document.getElementById("authOverlay").style.display = "none";
+    renderMovies(movies);
 }
-
-init();
