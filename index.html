@@ -1,79 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>CineLux</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="style.css">
-<script src="app.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineLux | Premium Streaming</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- LOGIN / SIGNUP -->
-<div id="auth">
-  <div class="auth-box">
-    <h1>Cine<span>Lux</span></h1>
+    <div id="authOverlay">
+        <div>
+            <h1 class="logo-text">CINE<span>LUX</span></h1>
+            <div id="g_id_onload"
+                data-client_id="739537461326-r2gspogeoruch5a4b2m6kui2v9e1lchp.apps.googleusercontent.com"
+                data-callback="onGoogleLogin">
+            </div>
+            <div class="g_id_signin" data-type="standard" data-size="large"></div>
+        </div>
+    </div>
 
-    <input id="email" placeholder="Email">
-    <input id="password" type="password" placeholder="Password">
+    <div id="theater">
+        <div class="theater-header">
+            <h2 id="mTitle"></h2>
+            <button onclick="closeTheater()" class="btn btn-gold">CLOSE ✕</button>
+        </div>
+        <video id="vid" controls>
+            <source src="https://www.w3schools.com/html/mov_bbb.mp4">
+        </video>
+    </div>
 
-    <button class="primary" onclick="login()">Login</button>
-    <button class="google" onclick="googleLogin()">Continue with Google</button>
+    <nav>
+        <div onclick="toggleMenu(true)" class="menu-trigger">☰ MENU</div>
+        <div class="search-box">
+            <input type="text" placeholder="Search Movies..." onkeyup="searchMovies()">
+        </div>
+        <div id="uIcon" onclick="showPanel('account')" class="user-avatar">?</div>
+    </nav>
 
-    <p onclick="toggleAuth()">Create account</p>
-  </div>
-</div>
+    <div class="sidebar" id="sidebar">
+        <div class="side-link" onclick="showAllMovies()">Discovery</div>
+        <div class="side-link" onclick="showWatchlist()">My Watchlist</div>
+        <hr class="divider">
+        <div class="side-link" onclick="showPanel('account')">Account</div>
+        <div class="side-link" onclick="showPanel('settings')">Settings</div>
+        <div class="side-link logout-link" onclick="logout()">Logout</div>
+    </div>
 
-<!-- MAIN APP -->
-<div id="app">
+    <section class="hero" id="heroBanner">
+        <div>
+            <p class="hero-tag">NEW RELEASE</p>
+            <h1 class="hero-title">INTERSTELLAR</h1>
+            <button class="btn btn-gold" onclick="openTheater('Interstellar')">STREAM NOW</button>
+        </div>
+    </section>
 
-<header>
-  <div class="logo">CineLux</div>
-  <nav>
-    <span onclick="goHome()">Home</span>
-    <span onclick="filter('action')">Action</span>
-    <span onclick="filter('drama')">Drama</span>
-    <span onclick="filter('scifi')">Sci-Fi</span>
-    <span onclick="openAccount()">Account</span>
-  </nav>
-</header>
+    <main>
+        <div id="homePanel" class="panel active-panel">
+            <h2 id="catTitle">DISCOVERY</h2>
+            <div class="movie-grid" id="movieGrid"></div>
+        </div>
 
-<!-- BANNER -->
-<section class="banner">
-  <div class="banner-info">
-    <h1>Interstellar</h1>
-    <p>Humanity’s next step</p>
-    <button>▶ Play</button>
-  </div>
-</section>
+        <div id="accountPanel" class="panel">
+            <h1>Account Hub</h1>
+            <div class="card">
+                <h3>Subscription</h3>
+                <p class="status-pro">Lifetime Pro ✓</p>
+            </div>
+            <div class="card">
+                <h3>Premium Controls</h3>
+                <div class="btn-toggle">
+                    <span>🎬 4K Ultra Stream</span>
+                    <div class="toggle active"></div>
+                </div>
+                <div class="btn-toggle">
+                    <span>⬇ Offline Download</span>
+                    <div class="toggle active"></div>
+                </div>
+                <div class="btn-toggle">
+                    <span>🚫 Ad-Free Mode</span>
+                    <div class="toggle active"></div>
+                </div>
+            </div>
+        </div>
 
-<!-- MOVIE ROWS -->
-<section class="row">
-  <h2>Trending Now</h2>
-  <div class="movies" id="trending"></div>
-</section>
+        <div id="settingsPanel" class="panel">
+            <h1>Settings</h1>
+            <div class="card">
+                <div class="btn-toggle">
+                    <span>🎥 Cinema Mode</span>
+                    <div class="toggle" onclick="this.classList.toggle('active')"></div>
+                </div>
+                <div class="btn-toggle">
+                    <span>▶ Auto Play Next</span>
+                    <div class="toggle active"></div>
+                </div>
+                <button class="btn btn-gold" onclick="checkUpdates(this)">Check Updates</button>
+            </div>
+        </div>
+    </main>
 
-<section class="row">
-  <h2>Action Movies</h2>
-  <div class="movies" id="action"></div>
-</section>
-
-<section class="row">
-  <h2>Sci-Fi</h2>
-  <div class="movies" id="scifi"></div>
-</section>
-
-</div>
-
-<!-- ACCOUNT -->
-<div id="account">
-  <div class="account-box">
-    <h2>Account</h2>
-    <p>Plan: <b>Premium</b></p>
-    <button onclick="logout()">Logout</button>
-    <button onclick="closeAccount()">Close</button>
-  </div>
-</div>
-
+    <script src="script.js"></script>
 </body>
 </html>
