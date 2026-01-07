@@ -4,103 +4,44 @@
 <meta charset="UTF-8">
 <title>CineLux</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <script src="app.js" defer></script>
 </head>
 
 <body>
 
-<!-- LOGIN -->
-<div id="authOverlay">
-  <div class="auth-card">
-    <h1>CINE<span>Lux</span></h1>
-    <p>Premium Streaming Experience</p>
-    <button onclick="demoLogin()">Continue</button>
+<header>
+  <div class="logo">CineLux</div>
+  <nav>
+    <button onclick="showCategory('all')">Home</button>
+    <button onclick="showCategory('action')">Action</button>
+    <button onclick="showCategory('drama')">Drama</button>
+    <button onclick="showCategory('scifi')">Sci-Fi</button>
+    <button onclick="openAccount()">Account</button>
+  </nav>
+</header>
+
+<!-- BANNER (NORMAL SIZE) -->
+<section class="banner">
+  <div class="banner-text">
+    <h1>Interstellar</h1>
+    <p>Humanity’s next step</p>
+    <button>▶ Play</button>
+  </div>
+</section>
+
+<!-- MOVIES -->
+<main id="movies"></main>
+
+<!-- ACCOUNT MODAL -->
+<div id="accountModal">
+  <div class="account-box">
+    <h2>Account</h2>
+    <p>User: Demo User</p>
+    <button onclick="changePassword()">Change Password</button>
+    <button onclick="closeAccount()">Close</button>
   </div>
 </div>
-
-<!-- NAV -->
-<nav>
-  <div onclick="toggleMenu()">☰</div>
-  <input id="search" placeholder="Search movies..." oninput="searchMovies()">
-  <div id="userIcon" onclick="openPanel('account')">U</div>
-</nav>
-
-<!-- SIDEBAR -->
-<div id="sidebar">
-  <a onclick="openPanel('home')">Home</a>
-  <a onclick="filterCategory('Trending')">Trending</a>
-  <a onclick="filterCategory('Action')">Action</a>
-  <a onclick="filterCategory('Drama')">Drama</a>
-  <a onclick="filterCategory('Sci-Fi')">Sci-Fi</a>
-  <a onclick="openPanel('account')">Account</a>
-  <a onclick="openPanel('settings')">Settings</a>
-  <a class="danger" onclick="logout()">Logout</a>
-</div>
-
-<!-- HOME -->
-<section id="home" class="panel active">
-  <div class="hero">
-    <div class="hero-content">
-      <h1>Interstellar</h1>
-      <p>Humanity’s next step will be its greatest.</p>
-      <button class="play">▶ Play</button>
-    </div>
-  </div>
-
-  <h2 id="sectionTitle">Discovery</h2>
-  <div id="movieGrid"></div>
-</section>
-
-<!-- ACCOUNT -->
-<section id="account" class="panel">
-  <h2>Account</h2>
-
-  <div class="card profile">
-    <img id="avatar">
-    <div>
-      <h3 id="username">User</h3>
-      <p id="email">user@cinelux.app</p>
-      <span class="badge">Premium</span>
-    </div>
-  </div>
-
-  <div class="card">
-    <h4>Security</h4>
-
-    <input id="newPass" type="password" placeholder="New password">
-    <button class="full" onclick="changePassword()">Change Password</button>
-
-    <div class="row">
-      <span>Two-Factor Authentication</span>
-      <button onclick="toggleBtn(this)">OFF</button>
-    </div>
-  </div>
-</section>
-
-<!-- SETTINGS -->
-<section id="settings" class="panel">
-  <h2>Settings</h2>
-
-  <div class="card">
-    <div class="row">
-      <span>Dark Mode</span>
-      <button class="on" onclick="toggleTheme(this)">ON</button>
-    </div>
-
-    <div class="row">
-      <span>Reduce Animations</span>
-      <button onclick="toggleAnimations(this)">OFF</button>
-    </div>
-
-    <div class="row">
-      <span>Autoplay Next</span>
-      <button class="on" onclick="toggleBtn(this)">ON</button>
-    </div>
-  </div>
-</section>
 
 </body>
 </html>
