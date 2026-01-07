@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CineLux | Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Plus Jakarta Sans',sans-serif;}
+body{background:#050505;color:#fff;display:flex;justify-content:center;align-items:center;height:100vh;}
+.auth-box{background:#111;padding:40px;border-radius:12px;width:300px;text-align:center;}
+input{width:100%;padding:12px;margin:10px 0;border-radius:8px;border:none;background:#000;color:#fff;}
+button{width:100%;padding:12px;margin:10px 0;border:none;border-radius:8px;background:#D4AF37;color:#000;font-weight:800;cursor:pointer;}
+p span{color:#D4AF37;cursor:pointer;}
+.msg{color:#ff4444;margin-top:10px;}
+.hide{display:none;}
+</style>
+</head>
+<body>
+<div class="auth-box">
+<h1>CINE<span style="color:#D4AF37">LUX</span></h1>
+
+<!-- LOGIN -->
+<div id="loginBox">
+<input type="email" id="loginEmail" placeholder="Email">
+<input type="password" id="loginPass" placeholder="Password">
+<button onclick="login()">Login</button>
+<p>New here? <span onclick="showSignup()">Create account</span></p>
+</div>
+
+<!-- SIGNUP -->
+<div id="signupBox" class="hide">
+<input type="text" id="name" placeholder="Full Name">
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="pass" placeholder="Password">
+<button onclick="signup()">Sign Up</button>
+<p>Already have account? <span onclick="showLogin()">Login</span></p>
+</div>
+
+<p id="authMsg" class="msg"></p>
+</div>
+
+<script>
+// AUTH FUNCTIONS
+function showSignup(){
+  document.getElementById("loginBox").classList.add("hide");
+  document.getElementById("signupBox").classList.remove("hide");
+}
+function showLogin(){
+  document.getElementById("signupBox").classList.add("hide");
+  document.getElementById("loginBox").classList.remove("hide");
+}
+function signup(){
+  const name=document.getElementById("name").value;
+  const email=document.getElementById("email").value;
+  const pass=document.getElementById("pass").value;
+  if(!name||!email||!pass){showMsg("Fill all fields");return;}
+  localStorage.setItem("user",JSON.stringify({name,email,pass}));
+  showMsg("Account created! Login now.","green");
+  showLogin();
+}
+function login(){
+  const email=document.getElementById("loginEmail").value;
+  const pass=document.getElementById("loginPass").value;
+  const user=JSON.parse(localStorage.getItem("user"));
+  if(!user||email!==user.email||pass!==user.pass){showMsg("Invalid email or password");return;}
+  localStorage.setItem("logged","yes");
+  window.location.href="home.html";
+}
+function showMsg(text,color="red"){const m=document.getElementById("authMsg");m.style.color=color;m.innerText=text;}
+</script>
+</body>
+</html>
