@@ -7,38 +7,70 @@
 <link rel="stylesheet" href="style.css">
 <script src="app.js" defer></script>
 </head>
-
 <body>
+
+<!-- LOGIN / SIGNUP -->
+<div id="auth">
+  <div class="auth-box">
+    <h1>Cine<span>Lux</span></h1>
+
+    <input id="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Password">
+
+    <button class="primary" onclick="login()">Login</button>
+    <button class="google" onclick="googleLogin()">Continue with Google</button>
+
+    <p onclick="toggleAuth()">Create account</p>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
 
 <header>
   <div class="logo">CineLux</div>
   <nav>
-    <button onclick="showCategory('all')">Home</button>
-    <button onclick="showCategory('action')">Action</button>
-    <button onclick="showCategory('drama')">Drama</button>
-    <button onclick="showCategory('scifi')">Sci-Fi</button>
-    <button onclick="openAccount()">Account</button>
+    <span onclick="goHome()">Home</span>
+    <span onclick="filter('action')">Action</span>
+    <span onclick="filter('drama')">Drama</span>
+    <span onclick="filter('scifi')">Sci-Fi</span>
+    <span onclick="openAccount()">Account</span>
   </nav>
 </header>
 
-<!-- BANNER (NORMAL SIZE) -->
+<!-- BANNER -->
 <section class="banner">
-  <div class="banner-text">
+  <div class="banner-info">
     <h1>Interstellar</h1>
     <p>Humanity’s next step</p>
     <button>▶ Play</button>
   </div>
 </section>
 
-<!-- MOVIES -->
-<main id="movies"></main>
+<!-- MOVIE ROWS -->
+<section class="row">
+  <h2>Trending Now</h2>
+  <div class="movies" id="trending"></div>
+</section>
 
-<!-- ACCOUNT MODAL -->
-<div id="accountModal">
+<section class="row">
+  <h2>Action Movies</h2>
+  <div class="movies" id="action"></div>
+</section>
+
+<section class="row">
+  <h2>Sci-Fi</h2>
+  <div class="movies" id="scifi"></div>
+</section>
+
+</div>
+
+<!-- ACCOUNT -->
+<div id="account">
   <div class="account-box">
     <h2>Account</h2>
-    <p>User: Demo User</p>
-    <button onclick="changePassword()">Change Password</button>
+    <p>Plan: <b>Premium</b></p>
+    <button onclick="logout()">Logout</button>
     <button onclick="closeAccount()">Close</button>
   </div>
 </div>
