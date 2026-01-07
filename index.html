@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CineLux | Dashboard</title>
+    <title>CineLux | Ultra Premium</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -35,41 +35,36 @@
         .sidebar {
             position: fixed; left: -300px; top: 0; height: 100vh; width: 300px;
             background: var(--surface); z-index: 2000; transition: var(--transition);
-            padding: 50px 30px; border-right: 1px solid var(--border);
+            padding: 40px 20px; border-right: 1px solid var(--border);
+            overflow-y: auto;
         }
         .sidebar.active { left: 0; }
         .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; z-index: 1500; }
         .sidebar-overlay.active { display: block; }
 
-        .menu-list { list-style: none; margin-top: 50px; }
+        .menu-list { list-style: none; margin-top: 30px; }
         .menu-item { 
-            padding: 18px 15px; font-size: 1.1rem; font-weight: 600; color: #888;
-            cursor: pointer; transition: 0.3s; border-radius: 12px; margin-bottom: 10px;
+            padding: 14px 15px; font-size: 0.95rem; font-weight: 600; color: #888;
+            cursor: pointer; transition: 0.3s; border-radius: 12px; margin-bottom: 5px;
             display: flex; align-items: center;
         }
-        .menu-item i { width: 30px; margin-right: 10px; transition: 0.3s; }
+        .menu-item i { width: 25px; margin-right: 12px; font-size: 1.1rem; }
         .menu-item:hover { color: #fff; background: rgba(255,255,255,0.05); }
         .menu-item.active { color: var(--gold); background: rgba(212, 175, 55, 0.1); }
-        .menu-item.active i { transform: scale(1.2); }
 
-        /* --- CONTENT --- */
-        .main-content { padding: 110px 8% 100px; min-height: 100vh; }
-        .hero-mini { height: 40vh; border-radius: 20px; background: linear-gradient(45deg, #111, #222); display: flex; align-items: center; padding: 40px; margin-bottom: 40px; border: 1px solid var(--border); }
-        
-        .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
-        .card { background: var(--surface); border-radius: 15px; overflow: hidden; border: 1px solid var(--border); position: relative; }
+        /* --- LAYOUT --- */
+        .main-content { padding: 110px 5% 100px; min-height: 100vh; }
+        .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
+        .card { background: var(--surface); border-radius: 15px; overflow: hidden; border: 1px solid var(--border); transition: 0.3s; }
+        .card:hover { transform: translateY(-5px); border-color: var(--gold); }
         .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
-        .card-body { padding: 15px; }
+        .card-body { padding: 12px; }
 
-        /* --- SETTINGS & ABOUT --- */
-        .glass-panel { background: var(--surface); padding: 35px; border-radius: 25px; border: 1px solid var(--border); max-width: 800px; }
-        .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid var(--border); }
-        .feature-badge { background: var(--gold); color: #000; padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 800; }
-        
-        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
-        .about-card { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 15px; border: 1px solid var(--border); }
+        /* --- UI COMPONENTS --- */
+        .glass-panel { background: var(--surface); padding: 30px; border-radius: 20px; border: 1px solid var(--border); margin-bottom: 20px; }
+        .badge { background: var(--gold); color: #000; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; margin-left: 10px; }
 
-        @media (max-width: 768px) { .about-grid { grid-template-columns: 1fr; } }
+        @media (min-width: 1024px) { .movie-grid { grid-template-columns: repeat(6, 1fr); } }
     </style>
 </head>
 <body>
@@ -79,10 +74,13 @@
         <a href="#" class="logo">CINE<span>LUX</span></a>
         <ul class="menu-list">
             <li class="menu-item active" id="m-home" onclick="showSection('home')"><i class="fa-solid fa-house"></i> Home</li>
-            <li class="menu-item" id="m-watchlist" onclick="showSection('watchlist')"><i class="fa-solid fa-heart"></i> Watchlist</li>
+            <li class="menu-item" id="m-trending" onclick="showSection('trending')"><i class="fa-solid fa-fire"></i> Trending</li>
+            <li class="menu-item" id="m-toprated" onclick="showSection('toprated')"><i class="fa-solid fa-star"></i> Top Rated</li>
+            <li class="menu-item" id="m-watchlist" onclick="showSection('watchlist')"><i class="fa-solid fa-heart"></i> My Watchlist</li>
+            <li class="menu-item" id="m-insights" onclick="showSection('insights')"><i class="fa-solid fa-chart-line"></i> Viewing Insights</li>
             <li class="menu-item" id="m-settings" onclick="showSection('settings')"><i class="fa-solid fa-gear"></i> Settings</li>
             <li class="menu-item" id="m-about" onclick="showSection('about')"><i class="fa-solid fa-circle-info"></i> About Us</li>
-            <li class="menu-item" onclick="logout()" style="color: #ff4444; margin-top: 40px;"><i class="fa-solid fa-right-from-bracket"></i> Logout</li>
+            <li class="menu-item" onclick="logout()" style="color: #ff4444; margin-top: 20px;"><i class="fa-solid fa-right-from-bracket"></i> Logout</li>
         </ul>
     </div>
 
@@ -95,140 +93,123 @@
     </nav>
 
     <main class="main-content">
+        
         <section id="home-sec">
-            <div class="hero-mini" style="background: linear-gradient(to right, rgba(0,0,0,0.8), transparent), url('https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=1200') center/cover;">
-                <div>
-                    <h1 style="font-size: 3rem; margin-bottom: 10px;">Interstellar</h1>
-                    <p style="color: #aaa; max-width: 450px;">Explore the boundaries of time and space in this cinematic masterpiece.</p>
-                </div>
-            </div>
-            <h2 style="margin-bottom: 25px;">Trending</h2>
-            <div class="movie-grid" id="movieGrid"></div>
+            <h2 style="margin-bottom: 20px;">Explore Cinema</h2>
+            <div class="movie-grid" id="homeGrid"></div>
+        </section>
+
+        <section id="trending-sec" style="display: none;">
+            <h2 style="margin-bottom: 20px;">Trending This Week</h2>
+            <div class="movie-grid" id="trendingGrid"></div>
+        </section>
+
+        <section id="toprated-sec" style="display: none;">
+            <h2 style="margin-bottom: 20px;">All-Time Classics</h2>
+            <div class="movie-grid" id="topRatedGrid"></div>
         </section>
 
         <section id="watchlist-sec" style="display: none;">
-            <h2 style="margin-bottom: 25px;">Your Watchlist</h2>
+            <h2 style="margin-bottom: 20px;">My Watchlist</h2>
             <div class="movie-grid" id="watchlistGrid"></div>
+        </section>
+
+        <section id="insights-sec" style="display: none;">
+            <div class="glass-panel">
+                <h2 style="margin-bottom: 15px;">Viewing Analytics</h2>
+                <p style="color: #aaa;">Tracking your cinema journey.</p>
+                <div style="margin-top: 20px;">
+                    <p>Total Movies Watched: <b>142</b></p>
+                    <p>Favorite Genre: <b>Sci-Fi</b></p>
+                    <p>Screen Time (This Month): <b>24h 15m</b></p>
+                </div>
+            </div>
         </section>
 
         <section id="settings-sec" style="display: none;">
             <div class="glass-panel">
-                <h2 style="margin-bottom: 30px; color: var(--gold);">Account Settings</h2>
-                
-                <div class="setting-row">
-                    <div>
-                        <h4>Profile Name</h4>
-                        <p style="color:#666; font-size:0.8rem;">Change how your name appears on CineLux</p>
-                    </div>
-                    <input type="text" id="newName" placeholder="New Name" style="background:#222; border:1px solid #333; color:#fff; padding:8px; border-radius:5px;">
+                <h2 style="margin-bottom: 20px;">Profile Settings</h2>
+                <div style="margin-bottom: 15px;">
+                    <label style="font-size: 0.8rem; color: #666;">DISPLAY NAME</label>
+                    <input type="text" id="newName" style="width:100%; background:#222; border:1px solid #333; color:#fff; padding:10px; border-radius:8px; margin-top:5px;">
                 </div>
-
-                <div class="setting-row">
-                    <div>
-                        <h4>Streaming Quality <span class="feature-badge">ADVANCED</span></h4>
-                        <p style="color:#666; font-size:0.8rem;">Current: 4K Ultra HD (Active)</p>
-                    </div>
-                    <select style="background:#222; color:#fff; padding:8px; border-radius:5px;"><option>4K Ultra HD</option><option>1080p</option></select>
-                </div>
-
-                <div class="setting-row">
-                    <div>
-                        <h4>Auto-Play Next Episode</h4>
-                        <p style="color:#666; font-size:0.8rem;">Saves time during binges</p>
-                    </div>
-                    <input type="checkbox" checked>
-                </div>
-
-                <button onclick="saveSettings()" style="margin-top:30px; width:100%; padding:15px; background:var(--gold); border:none; border-radius:12px; font-weight:800; cursor:pointer;">UPDATE PROFILE</button>
+                <button onclick="saveSettings()" style="width:100%; padding:12px; background:var(--gold); border:none; border-radius:8px; font-weight:800; cursor:pointer;">SAVE CHANGES</button>
             </div>
         </section>
 
         <section id="about-sec" style="display: none;">
             <div class="glass-panel">
-                <h2 style="margin-bottom: 15px;">Experience the Future of Cinema</h2>
-                <p style="color: #aaa; line-height: 1.8;">CineLux is not just a streaming service; it is a curated digital theater. Built on high-speed cloud architecture, we deliver content with zero latency and 10-bit color depth.</p>
-                
-                <div class="about-grid">
-                    <div class="about-card">
-                        <i class="fa-solid fa-bolt" style="color:var(--gold); font-size:1.5rem;"></i>
-                        <h4 style="margin-top:15px;">Hyper-Speed</h4>
-                        <p style="font-size:0.8rem; color:#777; margin-top:10px;">Instant buffer-less playback using our proprietary CDN global network.</p>
-                    </div>
-                    <div class="about-card">
-                        <i class="fa-solid fa-shield-halved" style="color:var(--gold); font-size:1.5rem;"></i>
-                        <h4 style="margin-top:15px;">Ultra Privacy</h4>
-                        <p style="font-size:0.8rem; color:#777; margin-top:10px;">Your viewing history is encrypted. We never sell your data to third parties.</p>
-                    </div>
-                </div>
+                <h2 style="margin-bottom: 10px;">CineLux Ultra <span class="badge">v2.5</span></h2>
+                <p style="color:#aaa; line-height: 1.6;">A luxury interface designed for film archivists. We use low-latency protocols to ensure your viewing experience is never interrupted.</p>
             </div>
         </section>
+
     </main>
 
     <script>
-        const movies = [
-            { id: 1, t: "Inception", y: "2010", i: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400" },
-            { id: 2, t: "The Batman", y: "2022", i: "https://images.unsplash.com/photo-1531259683007-016a7b628fc3?w=400" },
-            { id: 3, t: "Dune", y: "2021", i: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=400" },
-            { id: 4, t: "The Last of Us", y: "2023", i: "https://images.unsplash.com/photo-1594909122845-11baa439b7bf?w=400" }
+        const library = [
+            { id: 1, t: "Inception", y: "2010", r: 9.2, tr: true, i: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400" },
+            { id: 2, t: "The Batman", y: "2022", r: 8.5, tr: true, i: "https://images.unsplash.com/photo-1531259683007-016a7b628fc3?w=400" },
+            { id: 3, t: "Interstellar", y: "2014", r: 9.5, tr: false, i: "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=400" },
+            { id: 4, t: "Dune: Part Two", y: "2024", r: 9.0, tr: true, i: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=400" }
         ];
 
         let watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
-
-        // LOAD USER
         const user = JSON.parse(localStorage.getItem('user'));
+
         if(!user) window.location.href = "login.html";
         document.getElementById('userInitial').innerText = user.name[0].toUpperCase();
 
-        function renderMovies() {
-            document.getElementById('movieGrid').innerHTML = movies.map(m => `
+        function showSection(id) {
+            // Hide all
+            ['home', 'trending', 'toprated', 'watchlist', 'insights', 'settings', 'about'].forEach(s => {
+                const sec = document.getElementById(s + '-sec');
+                if(sec) sec.style.display = 'none';
+                const menu = document.getElementById('m-' + s);
+                if(menu) menu.classList.remove('active');
+            });
+
+            // Show current
+            document.getElementById(id + '-sec').style.display = 'block';
+            document.getElementById('m-' + id).classList.add('active');
+            
+            if(id === 'home') renderGrid('homeGrid', library);
+            if(id === 'trending') renderGrid('trendingGrid', library.filter(m => m.tr));
+            if(id === 'toprated') renderGrid('topRatedGrid', library.filter(m => m.r >= 9.0));
+            if(id === 'watchlist') renderWL();
+            
+            toggleMenu();
+        }
+
+        function renderGrid(targetId, data) {
+            document.getElementById(targetId).innerHTML = data.map(m => `
                 <div class="card">
                     <img src="${m.i}">
                     <div class="card-body">
-                        <b>${m.t}</b><br><small>${m.y}</small>
-                        <button onclick="toggleWL(${m.id})" style="float:right; background:none; border:none; color:${watchlist.includes(m.id)?'var(--gold)':'#444'}; cursor:pointer;">
-                            <i class="fa-solid fa-heart"></i>
-                        </button>
+                        <b style="font-size:0.85rem;">${m.t}</b>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:5px;">
+                            <small style="color:#666">${m.y}</small>
+                            <i class="fa-solid fa-heart" onclick="toggleWL(${m.id})" style="color:${watchlist.includes(m.id)?'var(--gold)':'#333'}; cursor:pointer;"></i>
+                        </div>
                     </div>
                 </div>
             `).join('');
         }
 
-        function showSection(id) {
-            // 1. Hide all sections
-            ['home', 'watchlist', 'settings', 'about'].forEach(s => {
-                document.getElementById(s + '-sec').style.display = 'none';
-                document.getElementById('m-' + s).classList.remove('active');
-            });
-
-            // 2. Show target
-            document.getElementById(id + '-sec').style.display = 'block';
-            document.getElementById('m-' + id).classList.add('active');
-            
-            if(id === 'watchlist') renderWL();
-            toggleMenu();
-        }
-
         function toggleWL(id) {
             watchlist = watchlist.includes(id) ? watchlist.filter(x => x!==id) : [...watchlist, id];
             localStorage.setItem('watchlist', JSON.stringify(watchlist));
-            renderMovies();
+            showSection('home'); // Refresh
         }
 
         function renderWL() {
-            const list = movies.filter(m => watchlist.includes(m.id));
-            document.getElementById('watchlistGrid').innerHTML = list.length ? list.map(m => `
-                <div class="card"><img src="${m.i}"><div class="card-body"><b>${m.t}</b></div></div>
-            `).join('') : "<p style='color:#444'>Watchlist empty.</p>";
+            const list = library.filter(m => watchlist.includes(m.id));
+            document.getElementById('watchlistGrid').innerHTML = list.length ? list.map(m => `<div class="card"><img src="${m.i}"><div class="card-body"><b>${m.t}</b></div></div>`).join('') : "<p style='color:#444'>Empty</p>";
         }
 
         function saveSettings() {
-            const name = document.getElementById('newName').value;
-            if(name) {
-                user.name = name;
-                localStorage.setItem('user', JSON.stringify(user));
-                alert("Profile Updated!");
-                location.reload();
-            }
+            const n = document.getElementById('newName').value;
+            if(n) { user.name = n; localStorage.setItem('user', JSON.stringify(user)); location.reload(); }
         }
 
         function toggleMenu() {
@@ -238,7 +219,8 @@
 
         function logout() { localStorage.removeItem('user'); window.location.href="login.html"; }
 
-        renderMovies();
+        // Init
+        showSection('home');
     </script>
 </body>
 </html>
