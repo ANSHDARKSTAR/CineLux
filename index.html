@@ -3,82 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CineLux | Discovery</title>
+    <title>CineLux | Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
     <style>
-        :root { --gold: #D4AF37; --bg: #050505; --surface: #0f0f0f; --border: rgba(255, 255, 255, 0.1); }
+        :root {
+            --gold: #D4AF37;
+            --bg: #050505;
+            --surface: #111111;
+            --border: rgba(255, 255, 255, 0.08);
+            --nav-bg: rgba(5, 5, 5, 0.85);
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background: var(--bg); color: #fff; }
         
-        nav { position: fixed; top: 0; width: 100%; height: 70px; display: flex; align-items: center; justify-content: space-between; padding: 0 5%; z-index: 100; background: rgba(5,5,5,0.8); backdrop-filter: blur(10px); }
-        .brand span { color: var(--gold); }
-        .user-profile { display: flex; align-items: center; gap: 12px; cursor: pointer; }
-        .avatar { width: 35px; height: 35px; background: var(--gold); border-radius: 50%; color: #000; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+        body { 
+            background-color: var(--bg); 
+            color: #fff; 
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
 
-        .hero { height: 70vh; background: linear-gradient(to top, var(--bg), transparent), url('https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=1200') center/cover; display: flex; align-items: flex-end; padding: 5% 8%; }
-        .hero h1 { font-size: 3.5rem; font-weight: 800; }
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed; top: 0; width: 100%; height: 80px;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 6%; z-index: 1000;
+            background: var(--nav-bg);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border);
+        }
 
-        .section { padding: 40px 8%; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
-        .card { background: var(--surface); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); transition: 0.3s; cursor: pointer; }
-        .card:hover { transform: translateY(-5px); border-color: var(--gold); }
-        .card img { width: 100%; height: 280px; object-fit: cover; }
-        .card-info { padding: 12px; }
-        .card-info b { font-size: 0.9rem; }
-        .logout-btn { background: none; border: 1px solid #ff4444; color: #ff4444; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 10px; }
+        .logo { font-size: 1.6rem; font-weight: 800; letter-spacing: -1px; color: #fff; text-decoration: none; }
+        .logo span { color: var(--gold); }
+
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+
+        .profile-box { display: flex; align-items: center; gap: 12px; background: var(--glass); padding: 5px 15px; border-radius: 50px; border: 1px solid var(--border); }
+        .avatar { 
+            width: 35px; height: 35px; background: var(--gold); border-radius: 50%; 
+            color: #000; display: flex; align-items: center; justify-content: center; 
+            font-weight: 800; font-size: 0.9rem;
+        }
+        
+        .logout-btn { 
+            background: transparent; border: 1px solid #ff4444; color: #ff4444; 
+            padding: 6px 12px; border-radius: 8px; font-size: 0.7rem; 
+            font-weight: 700; cursor: pointer; transition: 0.3s;
+        }
+        .logout-btn:hover { background: #ff4444; color: #fff; }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 75vh;
+            width: 100%;
+            background: linear-gradient(to top, var(--bg), transparent 50%),
+                        linear-gradient(to right, var(--bg), transparent 70%),
+                        url('https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=1600') center/cover;
+            display: flex; align-items: center; padding: 0 8%;
+            margin-bottom: -50px;
+        }
+        .hero-content h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 800; line-height: 1; margin-bottom: 15px; }
+        .hero-tag { color: var(--gold); font-weight: 800; letter-spacing: 3px; font-size: 0.8rem; margin-bottom: 10px; display: block; }
+
+        /* --- MOVIE GRID --- */
+        .container { padding: 0 8% 100px 8%; position: relative; z-index: 10; }
+        .section-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 25px; color: #fff; }
+
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+        }
+
+        .movie-card {
+            background: var(--surface);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--gold);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+        }
+
+        .movie-card img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .movie-info { padding: 15px; }
+        .movie-info h4 { font-size: 1rem; font-weight: 700; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .movie-info p { color: #666; font-size: 0.8rem; font-weight: 600; }
+
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            .movie-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
+            .movie-card img { height: 200px; }
+            nav { padding: 0 4%; }
+        }
     </style>
 </head>
 <body>
 
     <nav>
-        <h2 class="brand">CINE<span>LUX</span></h2>
-        <div class="user-profile">
-            <div style="text-align: right;">
-                <p id="navName" style="font-size: 0.8rem; font-weight: 600;"></p>
-                <button class="logout-btn" onclick="logout()">LOGOUT</button>
+        <a href="#" class="logo">CINE<span>LUX</span></a>
+        <div class="nav-right">
+            <div class="profile-box">
+                <p id="userName" style="font-size: 0.8rem; font-weight: 600;"></p>
+                <div class="avatar" id="userInitial">?</div>
             </div>
-            <div class="avatar" id="navInitial"></div>
+            <button class="logout-btn" onclick="logout()">LOGOUT</button>
         </div>
     </nav>
 
-    <div class="hero">
-        <div>
-            <p style="color:var(--gold); font-weight: 800;">FEATURED</p>
+    <header class="hero">
+        <div class="hero-content">
+            <span class="hero-tag">TRENDING NOW</span>
             <h1>INTERSTELLAR</h1>
+            <p style="max-width: 500px; color: #aaa; margin-bottom: 20px;">A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.</p>
+            <button style="background: var(--gold); color: #000; padding: 14px 28px; border: none; border-radius: 10px; font-weight: 800; cursor: pointer;">WATCH NOW</button>
         </div>
-    </div>
+    </header>
 
-    <div class="section">
-        <h3 style="margin-bottom: 20px;">Trending Now</h3>
-        <div class="grid" id="movieGrid"></div>
-    </div>
+    <main class="container">
+        <h3 class="section-title">Premium Selection</h3>
+        <div class="movie-grid" id="movieGrid">
+            </div>
+    </main>
 
     <script>
+        // 1. SECURE AUTH CHECK
+        const user = JSON.parse(localStorage.getItem('user'));
+        
+        if (!user) {
+            window.location.href = "login.html";
+        } else {
+            document.getElementById('userName').innerText = user.name;
+            document.getElementById('userInitial').innerText = user.name[0].toUpperCase();
+        }
+
+        // 2. MOVIE DATA
         const movies = [
-            { t: "The Dark Knight", y: "2008", i: "https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=400" },
-            { t: "Inception", y: "2010", i: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400" },
-            { t: "Dune", y: "2021", i: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=400" },
-            { t: "Joker", y: "2019", i: "https://images.unsplash.com/photo-1509248961158-e54f6934749c?w=400" },
-            { t: "The Batman", y: "2022", i: "https://images.unsplash.com/photo-1531259683007-016a7b628fc3?w=400" },
-            { t: "Oppenheimer", y: "2023", i: "https://images.unsplash.com/photo-1436076863939-06870fe779c2?w=400" },
-            { t: "Avatar 2", y: "2022", i: "https://images.unsplash.com/photo-1505686994434-e3cc5abf1330?w=400" },
-            { t: "Gladiator II", y: "2024", i: "https://images.unsplash.com/photo-1594909122845-11baa439b7bf?w=400" }
+            { t: "The Dark Knight", y: "2008", i: "https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=500" },
+            { t: "Inception", y: "2010", i: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=500" },
+            { t: "Dune", y: "2021", i: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500" },
+            { t: "The Batman", y: "2022", i: "https://images.unsplash.com/photo-1531259683007-016a7b628fc3?w=500" },
+            { t: "Joker", y: "2019", i: "https://images.unsplash.com/photo-1509248961158-e54f6934749c?w=500" },
+            { t: "Oppenheimer", y: "2023", i: "https://images.unsplash.com/photo-1436076863939-06870fe779c2?w=500" },
+            { t: "Avatar 2", y: "2022", i: "https://images.unsplash.com/photo-1505686994434-e3cc5abf1330?w=500" },
+            { t: "Blade Runner", y: "2017", i: "https://images.unsplash.com/photo-1485846234645-a62644f84728?w=500" },
+            { t: "Gladiator II", y: "2024", i: "https://images.unsplash.com/photo-1594909122845-11baa439b7bf?w=500" },
+            { t: "The Matrix", y: "1999", i: "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=500" }
         ];
 
-        const user = JSON.parse(localStorage.getItem('user'));
-        if (!user) window.location.href = "login.html";
-
-        document.getElementById('navName').innerText = user.name;
-        document.getElementById('navInitial').innerText = user.name[0].toUpperCase();
-
+        // 3. RENDER GRID
         const grid = document.getElementById('movieGrid');
-        grid.innerHTML = movies.map(m => `
-            <div class="card">
-                <img src="${m.i}">
-                <div class="card-info"><b>${m.t}</b><br><small style="color:#666">${m.y}</small></div>
+        grid.innerHTML = movies.map(movie => `
+            <div class="movie-card">
+                <img src="${movie.i}" alt="${movie.t}">
+                <div class="movie-info">
+                    <h4>${movie.t}</h4>
+                    <p>${movie.y} • 4K HDR</p>
+                </div>
             </div>
         `).join('');
 
+        // 4. LOGOUT
         function logout() {
             localStorage.removeItem('user');
             window.location.href = "login.html";
