@@ -17,7 +17,7 @@
         <div>
             <h1 class="logo-text">CINE<span>LUX</span></h1>
             <div id="g_id_onload"
-                data-client_id="YOUR_GOOGLE_CLIENT_ID"
+                data-client_id="739537461326-r2gspogeoruch5a4b2m6kui2v9e1lchp.apps.googleusercontent.com"
                 data-callback="onGoogleLogin">
             </div>
             <div class="g_id_signin" data-type="standard" data-size="large"></div>
@@ -61,6 +61,12 @@
 
     <main>
         <div id="homePanel" class="panel active-panel">
+            
+            <section id="continueSection" style="display:none; margin-bottom: 40px;">
+                <h3 style="color:var(--gold); margin-bottom:15px;">CONTINUE WATCHING</h3>
+                <div class="movie-grid" id="continueGrid"></div>
+            </section>
+
             <h2 id="catTitle">DISCOVERY</h2>
             
             <div class="filter-bar">
@@ -96,18 +102,19 @@
         <div class="footer-grid">
             <div>
                 <h3 class="gold-text">CINELUX</h3>
-                <p>The gold standard in home cinema.</p>
+                <p>The gold standard in home cinema streaming. Experience 4K quality from your couch.</p>
             </div>
             <div>
                 <h4>Explore</h4>
-                <p>Movies</p>
-                <p>TV Shows</p>
+                <p onclick="showAllMovies()">Browse All</p>
                 <p>Originals</p>
+                <p>Trending</p>
             </div>
             <div>
                 <h4>Support</h4>
                 <p>Help Center</p>
-                <p>Contact Us</p>
+                <p>Privacy Policy</p>
+                <p>Terms of Service</p>
             </div>
         </div>
     </footer>
