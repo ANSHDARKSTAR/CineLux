@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineLux | Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --bg: #050505;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+            --gold-glow: rgba(212, 175, 55, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* LEFT SIDE: CINEMATIC VISUAL */
+        .auth-visual {
+            flex: 1.2;
+            position: relative;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                        url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1200') center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 50px;
+        }
+
+        .visual-content {
+            z-index: 2;
+        }
+
+        .auth-visual::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, transparent 80%, var(--bg));
+        }
+
+        /* RIGHT SIDE: LOGIN FORM */
+        .auth-form-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0 8%;
+            z-index: 5;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 420px;
+            animation: slideIn 0.8s cubic-bezier(0.2, 1, 0.3, 1);
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: -1px;
+        }
+
+        .logo span { color: var(--gold); }
+
+        .subtitle {
+            color: #888;
+            margin-bottom: 40px;
+            font-size: 0.95rem;
+        }
+
+        /* INPUT STYLING */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--gold);
+            background: rgba(255,255,255,0.08);
+            box-shadow: 0 0 15px var(--gold-glow);
+        }
+
+        /* BUTTONS */
+        .btn-login {
+            width: 100%;
+            padding: 16px;
+            background: var(--gold);
+            border: none;
+            border-radius: 12px;
+            color: #000;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px var(--gold-glow);
+            filter: brightness(1.1);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 30px 0;
+            color: #444;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .divider::before, .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .divider span { padding: 0 15px; }
+
+        .google-btn-wrapper {
+            display: flex;
+            justify-content: center;
+        }
+
+        .footer-links {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .footer-links a {
+            color: var(--gold);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* MOBILE RESPONSIVE */
+        @media (max-width: 900px) {
+            .auth-visual { display: none; }
+            .auth-form-container { background: radial-gradient(circle at top, #111, #050505); }
+        }
+    </style>
+</head>
+<body>
+
+    <section class="auth-visual">
+        <div class="visual-content">
+            <h1 style="font-size: 4rem; font-weight: 800; line-height: 1;">THE GOLD<br>STANDARD.</h1>
+            <p style="color: var(--gold); font-weight: 600; margin-top: 20px; letter-spacing: 2px;">PREMIUM STREAMING HUB</p>
+        </div>
+    </section>
+
+    <section class="auth-form-container">
+        <div class="auth-card">
+            <h1 class="logo">CINE<span>LUX</span></h1>
+            <p class="subtitle">Welcome back. Please enter your details.</p>
+
+            <form id="loginForm" onsubmit="handleManualLogin(event)">
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" id="email" placeholder="name@company.com" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" class="btn-login">SIGN IN</button>
+            </form>
+
+            <div class="divider">
+                <span>OR CONTINUE WITH</span>
+            </div>
+
+            <div class="google-btn-wrapper">
+                <div id="g_id_onload"
+                    data-client_id="739537461326-r2gspogeoruch5a4b2m6kui2v9e1lchp.apps.googleusercontent.com"
+                    data-callback="onGoogleLogin">
+                </div>
+                <div class="g_id_signin" data-type="standard" data-size="large" data-theme="filled_black" data-shape="pill"></div>
+            </div>
+
+            <p class="footer-links">
+                Don't have an account? <a href="#">Request Access</a>
+            </p>
+        </div>
+    </section>
+
+    <script>
+        // Manual Login Logic
+        function handleManualLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            
+            // Simulating user data
+            const user = {
+                name: email.split('@')[0],
+                email: email,
+                picture: 'https://ui-avatars.com/api/?name=' + email
+            };
+
+            saveAndRedirect(user);
+        }
+
+        // Google Login Logic
+        function onGoogleLogin(response) {
+            // Decode the JWT (ID Token)
+            const base64Url = response.credential.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const payload = JSON.parse(window.atob(base64));
+            
+            saveAndRedirect(payload);
+        }
+
+        function saveAndRedirect(userData) {
+            localStorage.setItem("user", JSON.stringify(userData));
+            
+            // Visual feedback before redirect
+            document.querySelector('.auth-card').style.opacity = '0.5';
+            document.querySelector('.btn-login').innerText = 'VERIFYING...';
+            
+            setTimeout(() => {
+                window.location.href = 'index.html'; // Path to your main app
+            }, 1000);
+        }
+
+        // Check if already logged in
+        window.onload = () => {
+            if(localStorage.getItem("user")) {
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>
