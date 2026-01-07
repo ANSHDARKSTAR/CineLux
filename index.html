@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CineLux | Premium</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CineLux | Dashboard</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     
@@ -11,8 +12,9 @@
         :root {
             --gold: #D4AF37;
             --bg: #050505;
-            --surface: #121212;
+            --surface: #111111;
             --border: rgba(255, 255, 255, 0.1);
+            --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -23,56 +25,75 @@
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-5px); color: var(--gold); }
         }
-
         .animated-icon { transition: 0.3s; display: inline-block; width: 25px; margin-right: 15px; text-align: center; }
         .menu-item:hover .animated-icon { animation: iconBounce 0.6s ease infinite; }
 
         /* --- NAVIGATION --- */
         nav {
-            position: fixed; top: 0; width: 100%; height: 75px;
+            position: fixed; top: 0; width: 100%; height: 70px;
             display: flex; align-items: center; justify-content: space-between;
-            padding: 0 5%; z-index: 1000; background: rgba(5, 5, 5, 0.9);
+            padding: 0 5%; z-index: 1000; background: rgba(5, 5, 5, 0.95);
             backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
         }
 
-        .menu-toggle { cursor: pointer; font-size: 1.5rem; color: var(--gold); background: none; border: none; }
-        .logo { font-size: 1.5rem; font-weight: 800; text-decoration: none; color: #fff; }
+        .logo { font-size: 1.4rem; font-weight: 800; text-decoration: none; color: #fff; letter-spacing: -1px; }
         .logo span { color: var(--gold); }
+
+        .nav-right { display: flex; align-items: center; gap: 15px; }
+        .avatar {
+            width: 38px; height: 38px; background: var(--gold); border-radius: 50%;
+            color: #000; font-weight: 800; display: flex; align-items: center; justify-content: center;
+        }
 
         /* --- SIDEBAR --- */
         .sidebar {
-            position: fixed; left: -300px; top: 0; height: 100vh; width: 300px;
-            background: var(--surface); z-index: 2000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: fixed; left: -100%; top: 0; height: 100dvh; width: 300px;
+            background: var(--surface); z-index: 2000; transition: var(--transition);
             padding: 50px 30px; border-right: 1px solid var(--border);
         }
         .sidebar.active { left: 0; }
         .sidebar-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.8); 
-            display: none; z-index: 1500;
+            position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; z-index: 1500;
         }
         .sidebar-overlay.active { display: block; }
 
         .menu-list { list-style: none; margin-top: 50px; }
         .menu-item { 
             padding: 18px 15px; font-size: 1.1rem; font-weight: 600; color: #888;
-            cursor: pointer; transition: 0.3s; border-radius: 12px; margin-bottom: 8px;
+            cursor: pointer; transition: 0.3s; border-radius: 12px; margin-bottom: 10px;
             display: flex; align-items: center;
         }
-        .menu-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
-        .menu-item.active { color: var(--gold); background: rgba(212, 175, 55, 0.1); }
+        .menu-item:hover, .menu-item.active { background: rgba(255,255,255,0.05); color: var(--gold); }
 
-        /* --- CONTENT --- */
-        .hero { height: 60vh; background: linear-gradient(to top, var(--bg), transparent), url('https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=1200') center/cover; display: flex; align-items: flex-end; padding: 50px 8%; }
-        .main-content { padding: 40px 8%; }
-        .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
-        
-        .card { background: var(--surface); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); transition: 0.3s; }
+        /* --- CONTENT SECTIONS --- */
+        .hero {
+            height: 60vh; background: linear-gradient(to top, var(--bg), transparent), 
+            url('https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=1600') center/cover;
+            display: flex; align-items: flex-end; padding: 0 8% 40px;
+        }
+        .main-content { padding: 40px 8% 100px; }
+        .section-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 30px; display: flex; align-items: center; gap: 10px; }
+        .section-title::before { content: ''; width: 5px; height: 30px; background: var(--gold); border-radius: 10px; }
+
+        /* --- MOVIE GRID --- */
+        .movie-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .card { background: var(--surface); border-radius: 15px; overflow: hidden; border: 1px solid var(--border); position: relative; transition: 0.3s; }
         .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
         .card-body { padding: 15px; }
+        .heart-btn { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.6); border: none; color: #fff; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; transition: 0.3s; }
+        
+        /* --- SETTINGS FORM --- */
+        .settings-card { background: var(--surface); padding: 30px; border-radius: 20px; border: 1px solid var(--border); max-width: 500px; }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 0.7rem; font-weight: 800; color: var(--gold); margin-bottom: 8px; }
+        .input-group input { width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 10px; color: #fff; }
 
+        /* --- LAPTOP OPTIMIZATION --- */
         @media (min-width: 1024px) {
-            .movie-grid { grid-template-columns: repeat(5, 1fr); gap: 30px; }
             nav { height: 90px; }
+            .movie-grid { grid-template-columns: repeat(5, 1fr); gap: 30px; }
+            .hero { height: 75vh; }
+            .card:hover { transform: translateY(-10px); border-color: var(--gold); }
         }
     </style>
 </head>
@@ -80,23 +101,13 @@
 
     <div class="sidebar-overlay" id="overlay" onclick="toggleMenu()"></div>
     <div class="sidebar" id="sidebar">
-        <h2 class="logo">CINE<span>LUX</span></h2>
+        <a href="#" class="logo">CINE<span>LUX</span></a>
         <ul class="menu-list">
-            <li class="menu-item active" onclick="filterCategory('All')">
-                <i class="fa-solid fa-house animated-icon"></i> Home
-            </li>
-            <li class="menu-item" onclick="filterCategory('Movie')">
-                <i class="fa-solid fa-film animated-icon"></i> Movies
-            </li>
-            <li class="menu-item" onclick="filterCategory('TV')">
-                <i class="fa-solid fa-tv animated-icon"></i> TV Shows
-            </li>
-            <li class="menu-item" onclick="alert('Watchlist coming soon!')">
-                <i class="fa-solid fa-heart animated-icon"></i> Watchlist
-            </li>
-            <li class="menu-item" onclick="logout()" style="color: #ff4444; margin-top: 40px; border-top: 1px solid #333; padding-top: 30px;">
-                <i class="fa-solid fa-right-from-bracket animated-icon"></i> Logout
-            </li>
+            <li class="menu-item active" onclick="showSection('home')"><i class="fa-solid fa-house animated-icon"></i> Home</li>
+            <li class="menu-item" onclick="showSection('watchlist')"><i class="fa-solid fa-heart animated-icon"></i> Watchlist</li>
+            <li class="menu-item" onclick="showSection('settings')"><i class="fa-solid fa-gear animated-icon"></i> Settings</li>
+            <li class="menu-item" onclick="showSection('about')"><i class="fa-solid fa-circle-info animated-icon"></i> About Us</li>
+            <li class="menu-item" onclick="logout()" style="color: #ff4444; margin-top: 50px;"><i class="fa-solid fa-right-from-bracket animated-icon"></i> Logout</li>
         </ul>
     </div>
 
@@ -105,71 +116,126 @@
             <button class="menu-toggle" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button>
             <a href="#" class="logo">CINE<span>LUX</span></a>
         </div>
-        <div style="display: flex; align-items: center; gap: 15px;">
-            <div class="avatar" id="userInitial">?</div>
+        <div class="nav-right">
+            <span id="navName" style="font-weight: 600; font-size: 0.9rem;">User</span>
+            <div class="avatar" id="navInitial">?</div>
         </div>
     </nav>
 
-    <div class="hero">
-        <h1 style="font-size: clamp(2rem, 5vw, 4rem); font-weight: 800;">Discovery</h1>
+    <div id="homeUI">
+        <header class="hero">
+            <h1 style="font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 800;">Interstellar</h1>
+        </header>
+
+        <main class="main-content">
+            <div id="exploreView">
+                <h2 class="section-title">Trending Now</h2>
+                <div class="movie-grid" id="movieGrid"></div>
+            </div>
+        </main>
     </div>
 
-    <div class="main-content">
-        <h2 id="sectionTitle" style="margin-bottom: 30px;">Recommended</h2>
-        <div class="movie-grid" id="movieGrid"></div>
-    </div>
+    <main class="main-content" id="altContent" style="display: none; padding-top: 120px;">
+        <div id="watchlistSection" style="display: none;">
+            <h2 class="section-title">My Watchlist</h2>
+            <div class="movie-grid" id="watchlistGrid"></div>
+        </div>
+
+        <div id="settingsSection" style="display: none;">
+            <h2 class="section-title">Settings</h2>
+            <div class="settings-card">
+                <div class="input-group">
+                    <label>UPDATE USERNAME</label>
+                    <input type="text" id="newNameInput" placeholder="Enter new name...">
+                </div>
+                <button onclick="updateProfile()" style="background:var(--gold); border:none; width:100%; padding:15px; border-radius:10px; font-weight:800; cursor:pointer;">SAVE CHANGES</button>
+            </div>
+        </div>
+
+        <div id="aboutSection" style="display: none;">
+            <h2 class="section-title">About Us</h2>
+            <p style="color: #aaa; max-width: 600px; line-height: 1.8;">CineLux is the world's most advanced experimental streaming interface. Designed for cinema lovers who appreciate high-end design and fluid performance.</p>
+        </div>
+    </main>
 
     <script>
-        // AUTH
-        const user = JSON.parse(localStorage.getItem('user'));
-        if (!user) window.location.href = "login.html";
-        document.getElementById('userInitial').innerText = user.name[0].toUpperCase();
-
-        // DATA WITH CATEGORIES
+        // 1. DATA & STATE
         const movies = [
-            { t: "Inception", y: "2010", c: "Movie", i: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400" },
-            { t: "Stranger Things", y: "2022", c: "TV", i: "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?w=400" },
-            { t: "The Batman", y: "2022", c: "Movie", i: "https://images.unsplash.com/photo-1531259683007-016a7b628fc3?w=400" },
-            { t: "The Last of Us", y: "2023", c: "TV", i: "https://images.unsplash.com/photo-1594909122845-11baa439b7bf?w=400" },
-            { t: "Dune", y: "2021", c: "Movie", i: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=400" },
-            { t: "Breaking Bad", y: "2013", c: "TV", i: "https://images.unsplash.com/photo-1596727147705-61a532a659bd?w=400" }
+            { id: 1, t: "Inception", y: "2010", i: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400" },
+            { id: 2, t: "The Batman", y: "2022", i: "https://images.unsplash.com/photo-1531259683007-016a7b628fc3?w=400" },
+            { id: 3, t: "Dune", y: "2021", i: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=400" },
+            { id: 4, t: "Oppenheimer", y: "2023", i: "https://images.unsplash.com/photo-1436076863939-06870fe779c2?w=400" },
+            { id: 5, t: "Gladiator II", y: "2024", i: "https://images.unsplash.com/photo-1594909122845-11baa439b7bf?w=400" }
         ];
 
-        function render(data) {
-            document.getElementById('movieGrid').innerHTML = data.map(m => `
+        let watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
+
+        // 2. AUTH CHECK
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user) window.location.href = "login.html";
+        document.getElementById('navName').innerText = user.name;
+        document.getElementById('navInitial').innerText = user.name[0].toUpperCase();
+
+        // 3. UI RENDERING
+        function renderMovies() {
+            document.getElementById('movieGrid').innerHTML = movies.map(m => `
                 <div class="card">
+                    <button class="heart-btn" onclick="toggleWatchlist(${m.id})" style="color: ${watchlist.includes(m.id) ? 'var(--gold)' : '#fff'}">
+                        <i class="fa-solid fa-heart"></i>
+                    </button>
                     <img src="${m.i}">
-                    <div class="card-body"><b>${m.t}</b><br><small style="color:#666">${m.y} • ${m.c}</small></div>
+                    <div class="card-body"><b>${m.t}</b><br><small style="color:#666">${m.y}</small></div>
                 </div>
             `).join('');
         }
 
-        // WORKING MENU LOGIC
-        function filterCategory(cat) {
-            const items = document.querySelectorAll('.menu-item');
-            items.forEach(el => el.classList.remove('active'));
+        function showSection(sect) {
+            const home = document.getElementById('homeUI');
+            const alt = document.getElementById('altContent');
+            const parts = ['watchlistSection', 'settingsSection', 'aboutSection'];
             
-            // Set clicked item to active
-            event.currentTarget.classList.add('active');
-            
-            document.getElementById('sectionTitle').innerText = cat === 'All' ? 'Recommended' : cat + 's';
-            
-            const filtered = cat === 'All' ? movies : movies.filter(m => m.c === cat);
-            render(filtered);
-            toggleMenu(); // Close sidebar after selecting
+            home.style.display = sect === 'home' ? 'block' : 'none';
+            alt.style.display = sect === 'home' ? 'none' : 'block';
+
+            parts.forEach(p => document.getElementById(p).style.display = 'none');
+            if(sect !== 'home') {
+                document.getElementById(sect + 'Section').style.display = 'block';
+                if(sect === 'watchlist') renderWatchlist();
+            }
+            toggleMenu();
         }
 
+        function toggleWatchlist(id) {
+            watchlist = watchlist.includes(id) ? watchlist.filter(x => x !== id) : [...watchlist, id];
+            localStorage.setItem('watchlist', JSON.stringify(watchlist));
+            renderMovies();
+        }
+
+        function renderWatchlist() {
+            const list = movies.filter(m => watchlist.includes(m.id));
+            document.getElementById('watchlistGrid').innerHTML = list.length ? list.map(m => `
+                <div class="card"><img src="${m.i}"><div class="card-body"><b>${m.t}</b></div></div>
+            `).join('') : "<p style='color:#666'>Your watchlist is empty.</p>";
+        }
+
+        // 4. UTILS
         function toggleMenu() {
             document.getElementById('sidebar').classList.toggle('active');
             document.getElementById('overlay').classList.toggle('active');
         }
 
-        function logout() {
-            localStorage.removeItem('user');
-            window.location.href = "login.html";
+        function updateProfile() {
+            const name = document.getElementById('newNameInput').value;
+            if(name) {
+                user.name = name;
+                localStorage.setItem('user', JSON.stringify(user));
+                location.reload();
+            }
         }
 
-        render(movies);
+        function logout() { localStorage.removeItem('user'); window.location.href = "login.html"; }
+
+        renderMovies();
     </script>
 </body>
 </html>
