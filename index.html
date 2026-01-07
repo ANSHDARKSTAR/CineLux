@@ -7,16 +7,17 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+    <div id="toast">Added to Watchlist!</div>
 
     <div id="authOverlay">
         <div>
             <h1 class="logo-text">CINE<span>LUX</span></h1>
             <div id="g_id_onload"
-                data-client_id="739537461326-r2gspogeoruch5a4b2m6kui2v9e1lchp.apps.googleusercontent.com"
+                data-client_id="YOUR_GOOGLE_CLIENT_ID"
                 data-callback="onGoogleLogin">
             </div>
             <div class="g_id_signin" data-type="standard" data-size="large"></div>
@@ -36,7 +37,7 @@
     <nav>
         <div onclick="toggleMenu(true)" class="menu-trigger">☰ MENU</div>
         <div class="search-box">
-            <input type="text" placeholder="Search Movies..." onkeyup="searchMovies()">
+            <input type="text" id="searchInput" placeholder="Search Movies..." onkeyup="searchMovies()">
         </div>
         <div id="uIcon" onclick="showPanel('account')" class="user-avatar">?</div>
     </nav>
@@ -61,6 +62,13 @@
     <main>
         <div id="homePanel" class="panel active-panel">
             <h2 id="catTitle">DISCOVERY</h2>
+            
+            <div class="filter-bar">
+                <button class="filter-btn active" onclick="filterGenre('All', this)">All</button>
+                <button class="filter-btn" onclick="filterGenre('Sci-Fi', this)">Sci-Fi</button>
+                <button class="filter-btn" onclick="filterGenre('Drama', this)">Drama</button>
+            </div>
+
             <div class="movie-grid" id="movieGrid"></div>
         </div>
 
@@ -69,21 +77,6 @@
             <div class="card">
                 <h3>Subscription</h3>
                 <p class="status-pro">Lifetime Pro ✓</p>
-            </div>
-            <div class="card">
-                <h3>Premium Controls</h3>
-                <div class="btn-toggle">
-                    <span>🎬 4K Ultra Stream</span>
-                    <div class="toggle active"></div>
-                </div>
-                <div class="btn-toggle">
-                    <span>⬇ Offline Download</span>
-                    <div class="toggle active"></div>
-                </div>
-                <div class="btn-toggle">
-                    <span>🚫 Ad-Free Mode</span>
-                    <div class="toggle active"></div>
-                </div>
             </div>
         </div>
 
@@ -94,14 +87,30 @@
                     <span>🎥 Cinema Mode</span>
                     <div class="toggle" onclick="this.classList.toggle('active')"></div>
                 </div>
-                <div class="btn-toggle">
-                    <span>▶ Auto Play Next</span>
-                    <div class="toggle active"></div>
-                </div>
                 <button class="btn btn-gold" onclick="checkUpdates(this)">Check Updates</button>
             </div>
         </div>
     </main>
+
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <h3 class="gold-text">CINELUX</h3>
+                <p>The gold standard in home cinema.</p>
+            </div>
+            <div>
+                <h4>Explore</h4>
+                <p>Movies</p>
+                <p>TV Shows</p>
+                <p>Originals</p>
+            </div>
+            <div>
+                <h4>Support</h4>
+                <p>Help Center</p>
+                <p>Contact Us</p>
+            </div>
+        </div>
+    </footer>
 
     <script src="script.js"></script>
 </body>
