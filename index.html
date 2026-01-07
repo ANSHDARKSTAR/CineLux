@@ -3,28 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CineLux | Enterprise Edition</title>
-    
+    <title>CineLux | Ultimate Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --gold: #D4AF37; --bg: #050505; --surface: #121212;
-            --border: rgba(255, 255, 255, 0.08); --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            --border: rgba(255, 255, 255, 0.08); --transition: 0.3s ease;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
         body { background-color: var(--bg); color: #fff; overflow-x: hidden; }
 
-        /* --- NAVIGATION --- */
+        /* --- NAV & SIDEBAR --- */
         nav {
             position: fixed; top: 0; width: 100%; height: 75px; display: flex; align-items: center; 
-            justify-content: space-between; padding: 0 5%; z-index: 1000; background: rgba(5, 5, 5, 0.9);
+            justify-content: space-between; padding: 0 5%; z-index: 1000; background: rgba(5, 5, 5, 0.95);
             backdrop-filter: blur(20px); border-bottom: 1px solid var(--border);
         }
-
-        /* --- SIDEBAR --- */
         .sidebar {
             position: fixed; left: -320px; top: 0; height: 100vh; width: 300px;
             background: var(--surface); z-index: 2000; transition: var(--transition);
@@ -34,37 +31,38 @@
         .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; z-index: 1500; }
         .sidebar-overlay.active { display: block; }
 
-        .menu-list { list-style: none; margin-top: 20px; }
         .menu-item { 
             padding: 14px 15px; font-size: 0.95rem; font-weight: 600; color: #888;
             cursor: pointer; transition: 0.3s; border-radius: 12px; margin-bottom: 5px; display: flex; align-items: center;
         }
-        .menu-item i { width: 30px; font-size: 1.1rem; }
+        .menu-item i { width: 30px; }
         .menu-item.active { color: var(--gold); background: rgba(212, 175, 55, 0.1); }
 
-        /* --- CONTENT --- */
+        /* --- CONTENT AREA --- */
         .main-content { padding: 110px 6% 100px; min-height: 100vh; }
+        .section { display: none; animation: fadeIn 0.4s ease; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
         .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
         .card { background: var(--surface); border-radius: 15px; overflow: hidden; border: 1px solid var(--border); }
         .card img { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
+        .card-body { padding: 12px; }
 
         /* --- SETTINGS HUB --- */
-        .settings-hub { display: grid; grid-template-columns: 250px 1fr; gap: 30px; }
-        .settings-nav { display: flex; flex-direction: column; gap: 10px; border-right: 1px solid var(--border); }
-        .set-link { padding: 12px; cursor: pointer; color: #666; font-size: 0.9rem; border-radius: 8px; transition: 0.3s; }
-        .set-link:hover, .set-link.active { color: var(--gold); background: rgba(255,255,255,0.05); }
+        .settings-hub { display: grid; grid-template-columns: 220px 1fr; gap: 30px; margin-top: 20px; }
+        .settings-nav { border-right: 1px solid var(--border); display: flex; flex-direction: column; gap: 5px; }
+        .set-link { padding: 12px; cursor: pointer; color: #666; border-radius: 8px; font-size: 0.9rem; }
+        .set-link.active { background: rgba(255,255,255,0.05); color: var(--gold); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
         
-        .settings-view { padding: 10px 20px; }
-        .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid var(--border); }
-        .setting-row h4 { font-size: 1rem; margin-bottom: 4px; }
-        .setting-row p { font-size: 0.8rem; color: #666; }
+        .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--border); }
+        input, select { background: #222; border: 1px solid #333; color: #fff; padding: 8px; border-radius: 6px; }
 
-        input[type="checkbox"] { accent-color: var(--gold); transform: scale(1.3); }
-        select, input[type="text"] { background: #222; border: 1px solid #333; color: #fff; padding: 8px; border-radius: 5px; }
-
-        @media (max-width: 900px) {
+        @media (max-width: 768px) {
             .settings-hub { grid-template-columns: 1fr; }
-            .settings-nav { flex-direction: row; overflow-x: auto; border-right: none; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+            .settings-nav { flex-direction: row; overflow-x: auto; border-right: none; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
         }
     </style>
 </head>
@@ -72,122 +70,154 @@
 
     <div class="sidebar-overlay" id="overlay" onclick="toggleMenu()"></div>
     <div class="sidebar" id="sidebar">
-        <h2 style="padding: 0 15px; margin-bottom: 20px;">CINE<span>LUX</span></h2>
+        <h2 style="margin-bottom: 30px; padding-left: 15px;">CINE<span>LUX</span></h2>
         <ul class="menu-list">
-            <li class="menu-item active" onclick="showSection('home')"><i class="fa-solid fa-house"></i> Home</li>
-            <li class="menu-item" onclick="showSection('downloads')"><i class="fa-solid fa-download"></i> Downloads</li>
-            <li class="menu-item" onclick="showSection('watchlist')"><i class="fa-solid fa-heart"></i> Watchlist</li>
-            <li class="menu-item" onclick="showSection('settings')"><i class="fa-solid fa-gear"></i> Settings</li>
-            <li class="menu-item" onclick="showSection('about')"><i class="fa-solid fa-circle-info"></i> About</li>
-            <li class="menu-item" onclick="logout()" style="color: #ff4444; margin-top: 50px;"><i class="fa-solid fa-right-from-bracket"></i> Logout</li>
+            <li class="menu-item active" onclick="navTo('home')"><i class="fa-solid fa-house"></i> Home</li>
+            <li class="menu-item" onclick="navTo('trending')"><i class="fa-solid fa-fire"></i> Trending</li>
+            <li class="menu-item" onclick="navTo('toprated')"><i class="fa-solid fa-star"></i> Top Rated</li>
+            <li class="menu-item" onclick="navTo('downloads')"><i class="fa-solid fa-download"></i> Downloads</li>
+            <li class="menu-item" onclick="navTo('watchlist')"><i class="fa-solid fa-heart"></i> Watchlist</li>
+            <li class="menu-item" onclick="navTo('insights')"><i class="fa-solid fa-chart-line"></i> Insights</li>
+            <li class="menu-item" onclick="navTo('settings')"><i class="fa-solid fa-gear"></i> Settings</li>
+            <li class="menu-item" onclick="navTo('about')"><i class="fa-solid fa-info-circle"></i> About</li>
+            <li class="menu-item" onclick="logout()" style="color:#ff4444; margin-top:30px;"><i class="fa-solid fa-power-off"></i> Logout</li>
         </ul>
     </div>
 
     <nav>
         <div style="display: flex; align-items: center; gap: 20px;">
             <button style="background:none; border:none; color:var(--gold); font-size:1.5rem;" onclick="toggleMenu()">☰</button>
-            <a href="#" style="text-decoration:none; color:#fff; font-weight:800; font-size:1.5rem;">CINE<span>LUX</span></a>
+            <h1 style="font-size: 1.2rem;">CINE<span>LUX</span></h1>
         </div>
         <div id="uInit" style="width:40px; height:40px; background:var(--gold); border-radius:50%; color:#000; display:flex; align-items:center; justify-content:center; font-weight:800;">?</div>
     </nav>
 
     <main class="main-content">
+        <section id="home" class="section active"><h2>Home</h2><div class="movie-grid" id="grid-home"></div></section>
+        <section id="trending" class="section"><h2>Trending</h2><div class="movie-grid" id="grid-trending"></div></section>
+        <section id="toprated" class="section"><h2>Top Rated</h2><div class="movie-grid" id="grid-toprated"></div></section>
+        <section id="downloads" class="section"><h2>Downloads</h2><div class="movie-grid" id="grid-downloads"></div></section>
+        <section id="watchlist" class="section"><h2>Watchlist</h2><div class="movie-grid" id="grid-watchlist"></div></section>
+        <section id="insights" class="section"><h2>Viewing Insights</h2><div style="padding:20px; background:#111; border-radius:15px;">Total Time: 48h | Movies: 12</div></section>
         
-        <section id="home-sec">
-            <h2 style="margin-bottom: 20px;">New Releases</h2>
-            <div class="movie-grid" id="homeGrid"></div>
+        <section id="about" class="section">
+            <h2>About CineLux</h2>
+            <p style="color:#888; margin-top:20px; line-height:1.6;">CineLux is an ultra-premium streaming dashboard built for cinema enthusiasts. Version 3.0.1.</p>
         </section>
 
-        <section id="downloads-sec" style="display: none;">
-            <div style="background: #111; padding: 20px; border-radius: 15px; margin-bottom: 30px; border: 1px solid var(--border);">
-                <h4>Offline Storage</h4>
-                <div style="width:100%; height:8px; background:#222; border-radius:10px; margin: 10px 0;">
-                    <div style="width:35%; height:100%; background:var(--gold); border-radius:10px;"></div>
-                </div>
-                <p style="font-size:0.8rem; color:#666;">14.2 GB used of 50 GB</p>
-            </div>
-            <div class="movie-grid">
-                <div class="card"><img src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400"><div style="padding:10px;"><b>Inception</b><br><small>4.2 GB • Downloaded</small></div></div>
-            </div>
-        </section>
-
-        <section id="settings-sec" style="display: none;">
+        <section id="settings" class="section">
             <div class="settings-hub">
                 <div class="settings-nav">
-                    <div class="set-link active" onclick="setTab('general')">General</div>
-                    <div class="set-link" onclick="setTab('notif')">Notifications</div>
-                    <div class="set-link" onclick="setTab('purchase')">Purchases</div>
-                    <div class="set-link" onclick="setTab('video')">Video Quality</div>
-                    <div class="set-link" onclick="setTab('privacy')">Privacy & Data</div>
-                    <div class="set-link" onclick="setTab('help')">Help & Legal</div>
+                    <div class="set-link active" onclick="switchTab('st-gen')">General</div>
+                    <div class="set-link" onclick="switchTab('st-vid')">Video Quality</div>
+                    <div class="set-link" onclick="switchTab('st-notif')">Notifications</div>
+                    <div class="set-link" onclick="switchTab('st-priv')">Privacy & History</div>
+                    <div class="set-link" onclick="switchTab('st-help')">Help Center</div>
                 </div>
-
-                <div class="settings-view">
-                    <div id="gen-tab">
-                        <h3>General Settings</h3>
-                        <div class="setting-row"><div><h4>Username</h4><p>Update your public ID</p></div><input type="text" id="un" placeholder="Name"></div>
-                        <div class="setting-row"><div><h4>Language</h4><p>System display language</p></div><select><option>English</option><option>Spanish</option></select></div>
+                <div class="settings-display">
+                    <div id="st-gen" class="tab-content active">
+                        <h3>General</h3>
+                        <div class="setting-row"><div><h4>Username</h4><p>Change your public name</p></div><input type="text" id="editName" placeholder="New Name"></div>
+                        <button onclick="saveName()" style="background:var(--gold); border:none; padding:10px 20px; border-radius:5px; margin-top:15px; font-weight:800;">Save Name</button>
                     </div>
-
-                    <div id="vid-tab" style="display:none;">
-                        <h3>Video & Data</h3>
-                        <div class="setting-row"><div><h4>Streaming Quality</h4><p>Highest uses more data</p></div><select><option>Auto</option><option>4K Ultra HD</option><option>Data Saver</option></select></div>
-                        <div class="setting-row"><div><h4>Data Saver Mode</h4><p>Limit bandwidth on mobile networks</p></div><input type="checkbox"></div>
+                    <div id="st-vid" class="tab-content">
+                        <h3>Video Quality</h3>
+                        <div class="setting-row"><div><h4>Streaming</h4><p>Resolution preference</p></div><select><option>4K Ultra HD</option><option>1080p</option></select></div>
+                        <div class="setting-row"><div><h4>Data Saver</h4><p>Reduce bandwidth usage</p></div><input type="checkbox"></div>
                     </div>
-
-                    <div id="priv-tab" style="display:none;">
-                        <h3>Privacy & History</h3>
-                        <div class="setting-row"><div><h4>Watch History</h4><p>Enable personalized recommendations</p></div><input type="checkbox" checked></div>
-                        <button style="color:#ff4444; background:none; border:none; margin-top:20px; cursor:pointer;">Clear All History</button>
+                    <div id="st-priv" class="tab-content">
+                        <h3>Privacy</h3>
+                        <div class="setting-row"><div><h4>History</h4><p>Record my watch history</p></div><input type="checkbox" checked></div>
+                        <button style="color:#ff4444; border:none; background:none; cursor:pointer; margin-top:20px;">Clear All Data</button>
                     </div>
-
-                    <div id="help-tab" style="display:none;">
-                        <h3>Support</h3>
-                        <div class="setting-row"><div><h4>Help Center</h4><p>FAQs and Troubleshooting</p></div><i class="fa-solid fa-chevron-right"></i></div>
-                        <div class="setting-row"><div><h4>Privacy Policy</h4><p>How we manage your data</p></div><i class="fa-solid fa-chevron-right"></i></div>
+                    <div id="st-help" class="tab-content">
+                        <h3>Help & Legal</h3>
+                        <div class="setting-row"><div><h4>Privacy Policy</h4></div><i class="fa-solid fa-chevron-right"></i></div>
+                        <div class="setting-row"><div><h4>Terms of Service</h4></div><i class="fa-solid fa-chevron-right"></i></div>
                     </div>
                 </div>
             </div>
         </section>
-
     </main>
 
     <script>
-        const movies = [{ id: 1, t: "Inception", y: "2010", i: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400" }, { id: 2, t: "Batman", y: "2022", i: "https://images.unsplash.com/photo-1531259683007-016a7b628fc3?w=400" }];
-        const user = JSON.parse(localStorage.getItem('user'));
-        if(!user) window.location.href="login.html";
-        document.getElementById('uInit').innerText = user.name[0];
+        const movies = [
+            { id: 1, t: "Inception", y: "2010", r: 9, tr: true, i: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400" },
+            { id: 2, t: "The Batman", y: "2022", r: 8, tr: true, i: "https://images.unsplash.com/photo-1531259683007-016a7b628fc3?w=400" },
+            { id: 3, t: "Dune", y: "2021", r: 9, tr: false, i: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=400" }
+        ];
 
-        function showSection(id) {
-            ['home','downloads','watchlist','settings','about'].forEach(s => {
-                const el = document.getElementById(s + '-sec');
-                if(el) el.style.display = 'none';
-            });
-            document.getElementById(id + '-sec').style.display = 'block';
-            if(id === 'home') renderGrid();
+        let watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
+        const user = JSON.parse(localStorage.getItem('user')) || {name: "User"};
+
+        // 1. Navigation Controller
+        function navTo(sectionId) {
+            // Update Sidebar UI
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            // Switch Sections
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+
+            // Logic for specific grids
+            if(sectionId === 'home') renderGrid('grid-home', movies);
+            if(sectionId === 'trending') renderGrid('grid-trending', movies.filter(m => m.tr));
+            if(sectionId === 'toprated') renderGrid('grid-toprated', movies.filter(m => m.r >= 9));
+            if(sectionId === 'watchlist') renderWL();
+            if(sectionId === 'downloads') renderGrid('grid-downloads', [movies[0]]);
+
             toggleMenu();
         }
 
-        function setTab(tab) {
-            ['gen','notif','purchase','vid','priv','help'].forEach(t => {
-                const el = document.getElementById(t + '-tab');
-                if(el) el.style.display = 'none';
-            });
-            const targets = { 'general':'gen', 'video':'vid', 'privacy':'priv', 'help':'help' };
-            if(targets[tab]) document.getElementById(targets[tab] + '-tab').style.display = 'block';
-            
+        // 2. Settings Tab Controller
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.set-link').forEach(l => l.classList.remove('active'));
-            event.target.classList.add('active');
+            
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
         }
 
-        function renderGrid() {
-            document.getElementById('homeGrid').innerHTML = movies.map(m => `<div class="card"><img src="${m.i}"><div style="padding:10px;"><b>${m.t}</b></div></div>`).join('');
+        // 3. Grid Renderer
+        function renderGrid(target, data) {
+            document.getElementById(target).innerHTML = data.map(m => `
+                <div class="card">
+                    <img src="${m.i}">
+                    <div class="card-body">
+                        <b>${m.t}</b><br><small>${m.y}</small>
+                        <i class="fa-solid fa-heart" onclick="toggleWL(${m.id})" style="float:right; cursor:pointer; color:${watchlist.includes(m.id)?'var(--gold)':'#444'}"></i>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function toggleMenu() { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('overlay').classList.toggle('active'); }
+        function renderWL() {
+            const list = movies.filter(m => watchlist.includes(m.id));
+            renderGrid('grid-watchlist', list);
+        }
+
+        function toggleWL(id) {
+            watchlist = watchlist.includes(id) ? watchlist.filter(x => x !== id) : [...watchlist, id];
+            localStorage.setItem('watchlist', JSON.stringify(watchlist));
+            renderGrid('grid-home', movies); // Refresh home grid
+        }
+
+        function saveName() {
+            const n = document.getElementById('editName').value;
+            if(n) { user.name = n; localStorage.setItem('user', JSON.stringify(user)); location.reload(); }
+        }
+
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+
         function logout() { localStorage.removeItem('user'); window.location.href="login.html"; }
 
-        renderGrid();
+        // Init
+        document.getElementById('uInit').innerText = user.name[0];
+        renderGrid('grid-home', movies);
     </script>
 </body>
 </html>
