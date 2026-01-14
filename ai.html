@@ -6,54 +6,74 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-:root{--glow:#00f2ff;--bg:#000d11;--glass:rgba(0,242,255,.12)}
+:root{
+  --glow:#00f2ff;
+  --bg:#000d11;
+  --glass:rgba(0,242,255,.12);
+}
+
 body{
   margin:0;
+  height:100vh;
   background:var(--bg);
   color:var(--glow);
   font-family:Courier New, monospace;
-  padding:15px;
-  height:100vh;
   display:flex;
-  flex-direction:column
-  background:var(--glass);
+  flex-direction:column;
   padding:10px;
-  border-radius:10px;
-  overflow:auto;
-  margin:10px 0
 }
-.msg{margin-bottom:10px}
-.user{color:#fff}
-.jarvis{color:var(--glow)}
-.system{color:#666;font-style:italic}
-.controls{display:flex;gap:6px}
+
+/* CHAT AREA */
+#chat{
+  flex:1;
+  background:var(--glass);
+  border-radius:10px;
+  padding:10px;
+  overflow-y:auto;
+  margin-bottom:10px;
+}
+
+/* MESSAGES */
+.msg{margin-bottom:8px;}
+.user{color:#fff;}
+.jarvis{color:var(--glow);}
+.system{color:#777;font-style:italic}
+
+/* CONTROLS */
+.controls{
+  display:flex;
+  gap:6px;
+}
+
 input{
   flex:1;
   background:transparent;
-  border:none;
+  border:1px solid var(--glow);
+  border-radius:6px;
   color:#fff;
-  outline:none
+  padding:6px;
+  outline:none;
 }
+
 button{
   background:none;
-  border:none;
+  border:1px solid var(--glow);
   color:var(--glow);
-  font-size:18px
+  border-radius:6px;
+  font-size:18px;
+  padding:4px 8px;
 }
+
+/* CAMERA */
 video{
   display:none;
   width:100%;
-  border-radius:10px
+  border-radius:10px;
 }
 </style>
 </head>
 
 <body>
-
-<div id="arc"></div>
-
-<video id="video" autoplay playsinline></video>
-<canvas id="canvas" hidden></canvas>
 
 <div id="chat">
   <div class="msg jarvis">Systems online. Awaiting your command, Sir.</div>
@@ -66,10 +86,12 @@ video{
   <button onclick="send()">➤</button>
 </div>
 
+<video id="video" autoplay playsinline></video>
+<canvas id="canvas" hidden></canvas>
+
 <script>
 /* ================= CONFIG ================= */
-// 🔴 PUT YOUR GEMINI API KEY HERE
-const GEMINI_KEY = "AIzaSyBZRyrS8wtbnYz6j_edg8eqsNtKMSkyT38";
+const GEMINI_KEY = "PASTE_YOUR_API_KEY_HERE";
 /* ========================================= */
 
 const chat = document.getElementById("chat");
@@ -82,9 +104,11 @@ function log(cls,text){
 }
 
 function speak(text){
+  speechSynthesis.cancel(); // FIX overlap
   log("jarvis", text);
   const u = new SpeechSynthesisUtterance(text);
   u.rate = 0.95;
+  u.pitch = 0.9;
   speechSynthesis.speak(u);
 }
 
@@ -92,27 +116,31 @@ function speak(text){
 async function askGemini(prompt){
   try{
     const r = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${GEMINI_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`,
       {
         method:"POST",
         headers:{ "Content-Type":"application/json" },
         body:JSON.stringify({
           contents:[{
-            parts:[{ text:`You are JARVIS. Calm, intelligent, British tone. Call the user Sir.\n\n${prompt}` }]
+            parts:[{
+              text:`You are JARVIS. Calm, intelligent, British tone. Call the user Sir.\n\n${prompt}`
+            }]
           }]
         })
       }
     );
+
     const d = await r.json();
-    return d.candidates[0].content.parts[0].text;
-  }catch{
+    return d.candidates?.[0]?.content?.parts?.[0]?.text 
+      || "No response received, Sir.";
+  }catch(e){
     return "Sir, my systems are temporarily unavailable.";
   }
 }
 
 /* ================= SEND ================= */
 async function send(){
-  if(!input.value) return;
+  if(!input.value.trim()) return;
   const q = input.value;
   input.value = "";
   log("user", q);
@@ -122,7 +150,11 @@ async function send(){
 
 /* ================= VOICE ================= */
 function startVoice(){
-  const r = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+  if(!("webkitSpeechRecognition" in window)) {
+    speak("Voice recognition not supported, Sir.");
+    return;
+  }
+  const r = new webkitSpeechRecognition();
   r.lang = "en-US";
   r.onresult = e=>{
     input.value = e.results[0][0].transcript;
@@ -131,24 +163,25 @@ function startVoice(){
   r.start();
 }
 
-/* ================= CAMERA (VISION) ================= */
+/* ================= CAMERA ================= */
 async function startCamera(){
-  video.style.display = "block";
-  const stream = await navigator.mediaDevices.getUserMedia({ video:true });
-  video.srcObject = stream;
+  try{
+    video.style.display = "block";
+    const stream = await navigator.mediaDevices.getUserMedia({ video:true });
+    video.srcObject = stream;
 
-  setTimeout(async ()=>{
-    const c = document.getElementById("canvas");
-    c.width = video.videoWidth;
-    c.height = video.videoHeight;
-    c.getContext("2d").drawImage(video,0,0);
-    const img = c.toDataURL("image/jpeg").split(",")[1];
-    stream.getTracks().forEach(t=>t.stop());
-    video.style.display = "none";
+    setTimeout(async ()=>{
+      const c = document.getElementById("canvas");
+      c.width = video.videoWidth;
+      c.height = video.videoHeight;
+      c.getContext("2d").drawImage(video,0,0);
+      const img = c.toDataURL("image/jpeg").split(",")[1];
 
-    try{
+      stream.getTracks().forEach(t=>t.stop());
+      video.style.display = "none";
+
       const r = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.0-flash:generateContent?key=${GEMINI_KEY}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`,
         {
           method:"POST",
           headers:{ "Content-Type":"application/json" },
@@ -162,12 +195,14 @@ async function startCamera(){
           })
         }
       );
+
       const d = await r.json();
       speak(d.candidates[0].content.parts[0].text);
-    }catch{
-      speak("Optical scan failed, Sir.");
-    }
-  },3000);
+
+    },2500);
+  }catch{
+    speak("Optical scan failed, Sir.");
+  }
 }
 </script>
 
